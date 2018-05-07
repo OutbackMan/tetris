@@ -1,12 +1,12 @@
 /*******************************************************************************
 
-Copyright (C) 2018, @GAME_CREATOR@
+Copyright (C) 2018, Ryan McClue
 
 g_common.h
 	"Common macro definitions."
 
 GAME:
-	"@GAME_DESCRIPTION@"
+	"Cross platform 2D SDL game."
 
 License:
 	"This file is subject to the terms and conditions defined in
@@ -25,16 +25,15 @@ License:
  * CMAKE DEFINITIONS
  *****************************************************************************/
 
-#cmakedefine GAME_BUILD_MODE_DEBUG 
-#cmakedefine GAME_BUILD_MODE_RELEASE 
+/* #undef GAME_BUILD_MODE_DEBUG */
+/* #undef GAME_BUILD_MODE_RELEASE */
 
-#define GAME_VERSION "@GAME_VERSION@"
-#define GAME_BUG_REPORT_ADDRESS "@GAME_BUG_REPORT_ADDRESS@"
-#define GAME_UNAME "@GAME_NAME@"
-#define GAME_LNAME "@GAME_NAME@"
-#define GAME_BINARY_STRING "@GAME_BINARY_STRING@"
-#define GAME_DESCRIPTION "@GAME_DESCRIPTION@"
-#define GAME_CREATOR "@GAME_CREATOR@"
+#define GAME_VERSION ""
+#define GAME_BUG_REPORT_ADDRESS "<git-link>"
+#define GAME_NAME ""
+#define GAME_BINARY_STRING "game"
+#define GAME_DESCRIPTION "Cross platform 2D SDL game."
+#define GAME_CREATOR "Ryan McClue"
 
 /******************************************************************************
  * COMMON MACROS

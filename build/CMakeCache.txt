@@ -203,14 +203,17 @@ GAME_SOURCE_DIR:STATIC=/home/ryan/prog/c/essential/working
 //Git command line client
 GIT_EXECUTABLE:FILEPATH=/usr/bin/git
 
+//Path to a library.
+SDL2MAIN_LIBRARY:FILEPATH=/usr/lib/libSDL2main.a
+
 //The directory containing a CMake configuration file for SDL2.
 SDL2_DIR:PATH=/usr/lib64/cmake/SDL2
 
 //Path to a file.
 SDL2_INCLUDE_DIR:PATH=/usr/include/SDL2
 
-//Path to a library.
-SDL2_LIBRARY_TEMP:FILEPATH=/usr/lib/libSDL2.so
+//Where the SDL2 Library can be found
+SDL2_LIBRARY:STRING=/usr/lib/libSDL2main.a;/usr/lib/libSDL2.so;-lpthread
 
 
 ########################
@@ -366,8 +369,11 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Git
 FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[/usr/bin/git][v2.17.0()]
+//Details about finding SDL2
+FIND_PACKAGE_MESSAGE_DETAILS_SDL2:INTERNAL=[/usr/lib/libSDL2main.a;/usr/lib/libSDL2.so;-lpthread][/usr/include/SDL2][v()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //ADVANCED property for variable: GIT_EXECUTABLE
 GIT_EXECUTABLE-ADVANCED:INTERNAL=1
+SDL2_LIBRARY_TEMP:INTERNAL=/usr/lib/libSDL2main.a;/usr/lib/libSDL2main.a;/usr/lib/libSDL2main.a;/usr/lib/libSDL2main.a;/usr/lib/libSDL2main.a;/usr/lib/libSDL2main.a;/usr/lib/libSDL2main.a;/usr/lib/libSDL2main.a;/usr/lib/libSDL2main.a;/usr/lib/libSDL2main.a;/usr/lib/libSDL2.so;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread
 

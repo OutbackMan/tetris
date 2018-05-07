@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "common.h"
+#include "g_common.h"
 
 int main(int argc, char* argv[argc + 1])
 {
