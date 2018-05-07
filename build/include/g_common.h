@@ -1,12 +1,12 @@
 /*******************************************************************************
 
-Copyright (C) 2018, @GAME_CREATOR@
+Copyright (C) 2018, 
 
 g_common.h
 	"Common macro definitions."
 
 GAME:
-	"@GAME_DESCRIPTION@"
+	""
 
 License:
 	"This file is subject to the terms and conditions defined in
@@ -25,12 +25,12 @@ License:
  * CMAKE DEFINITIONS
  *****************************************************************************/
 
-#cmakedefine GAME_VERSION "@GAME_VERSION@"
-#cmakedefine GAME_BUG_REPORT_ADDRESS "@GAME_BUG_REPORT_ADDRESS@"
-#cmakedefine GAME_NAME "@GAME_NAME@"
-#cmakedefine GAME_BINARY_STRING "@GAME_BINARY_STRING@"
-#cmakedefine GAME_DESCRIPTION "@GAME_DESCRIPTION@"
-#cmakedefine GAME_CREATOR "@GAME_CREATOR@"
+/* #undef GAME_VERSION */
+/* #undef GAME_BUG_REPORT_ADDRESS */
+/* #undef GAME_NAME */
+/* #undef GAME_BINARY_STRING */
+/* #undef GAME_DESCRIPTION */
+/* #undef GAME_CREATOR */
 
 /******************************************************************************
  * COMMON MACROS
