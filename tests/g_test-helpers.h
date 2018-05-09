@@ -6,14 +6,11 @@ typedef enum {
 	FAILURE
 } GAME_TEST_STATUS;
 
-static int game_tests_strcmp(const char* restrict s1, const char* restrict s2)
-{
-	while (*s1 && *s1 == *s2) {
-		++s1;
-		++s2;
-	}
+#define GAME_TEST_ASSERT(expr) \
+	((!expr) ? (game_test_report_failure(__FILE__, __LINE__, #expr), FAILURE) : SUCCESS)
 
-	return *s1 - *s2;
-}
+int game_test_report_failure(const char* file_name, const int line_number, const char* expr);
+
+int game_tests_strcmp(const char* s1, const char* s2);
 
 #endif

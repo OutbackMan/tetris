@@ -81,7 +81,7 @@ foreach(game_test_suite ${_game_test_suites})
 endforeach(game_test_suite)
 
 create_test_sourcelist(_game_sources game_test_driver.c ${_game_test_suite_sources})
-add_executable(game_test_driver ${_game_sources})
+add_executable(game_test_driver ${_game_sources} tests/g_test-helpers.c)
 target_link_libraries(game_test_driver ${SDL2_LIBRARIES})
 
 foreach(game_test_suite ${_game_test_suites})
