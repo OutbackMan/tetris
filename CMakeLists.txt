@@ -31,6 +31,7 @@ GameHandleVersion()
 
 set(_game_sources
 	src/g_main.c
+	src/utils/g_log.c
 )
 
 add_executable(game

@@ -1,1 +1,7 @@
+windows:
+	--> .c, .h
+	--> main.c and any other relevent app runners
+	--> build (cmake), i.e. terminal
+	--> test files
+
 1. Complete CTest project scaffold

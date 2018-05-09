@@ -43,7 +43,7 @@ License:
 
 #define GAME_INTERNAL static
 #define GAME_LOCAL_PERSIST static
-#define GAME_DEFAULT_INITIALISER {0}
+#define GAME_DEFAULT_INITIALISER {0,}
 
 #define GAME_LEAVE(func_leave_code) \
 	do { \
