@@ -30,8 +30,9 @@ License:
 
 #define GAME_VERSION "@GAME_VERSION@"
 #define GAME_BUG_REPORT_ADDRESS "@GAME_BUG_REPORT_ADDRESS@"
-#define GAME_UNAME "@GAME_NAME@"
-#define GAME_LNAME "@GAME_NAME@"
+#define GAME_NAME "@GAME_NAME@"
+#define GAME_UNAME "@GAME_UNAME@"
+#define GAME_LNAME "@GAME_LNAME@"
 #define GAME_BINARY_STRING "@GAME_BINARY_STRING@"
 #define GAME_DESCRIPTION "@GAME_DESCRIPTION@"
 #define GAME_CREATOR "@GAME_CREATOR@"
@@ -110,7 +111,7 @@ typedef int64_t int64;
  *****************************************************************************/
 
 #if defined(__GNUC__) || defined(__llvm__) 
-#define GAME_ALIGN
+#define GAME_ALIGN(val) __attribute__((aligned(val)))
 #define GAME_PURE __attribute__((pure))
 #define GAME_CONST __attribute__((const))
 #define GAME_COLD __attribute__((cold))
@@ -128,11 +129,23 @@ typedef int64_t int64;
 #define _CRT_SECURE_NO_WARNINGS
 #define inline __inline
 #define restrict __restrict
-#define GAME_ALIGN
-#define GAME_DEPRECATED
+#define GAME_ALIGN(val) __declspec(align(val))
+#define GAME_DEPRECATED __declspec(deprecated)
 #else
-#define GAME_ALIGN
+#define GAME_ALIGN(val)
+#define GAME_PURE
+#define GAME_CONST
+#define GAME_COLD
+#define GAME_HOT
+#define GAME_CHECK
 #define GAME_DEPRECATED
+#define GAME_USED
+#define GAME_UNUSED
+#define GAME_PACKED
+#define GAME_LIKELY(val)
+#define GAME_UNLIKELY(val)
+#define GAME_DESIGNATED
+#define GAME_FLATTEN
 #endif
 
 #endif
