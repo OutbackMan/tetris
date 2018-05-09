@@ -28,8 +28,12 @@ enable_language(C)
 include(GameHandleVersion)
 include(GameHandleBuildType)
 
-add_executable(game
+set(_game_sources
 	src/g_main.c
+)
+
+add_executable(game
+	${_game_sources}
 )
 
 target_include_directories(game PUBLIC
@@ -61,10 +65,39 @@ configure_file(
 )
 
 ################################################################################
+# CTEST CONFIGURATION                                                          #
+################################################################################
+enable_testing()
+
+set(_game_test_suites
+	example
+)
+
+set(example_tests "test_a" "test_b")
+
+# aggregate test suite source files
+foreach(game_test_suite ${_game_test_suites})
+	list(APPEND _game_test_suite_sources tests/${game_test_suite}TestSuite.c)
+endforeach(game_test_suite)
+
+create_test_sourcelist(_game_sources game_test_driver.c ${_game_test_suite_sources})
+add_executable(game_test_driver ${_game_sources})
+
+# generate test cases
+foreach(game_test_suite ${_game_test_suites})
+	foreach(game_test ${${game_test_suite}_tests})
+		add_test(NAME ${game_test_suite}_${game_test}
+			COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/game_test_driver ${game_test_suite}TestSuite ${game_test_suite}_${game_test}
+		)
+	endforeach(game_test)
+endforeach(game_test_suite)
+# then run with: ctest -R collisions
+
+################################################################################
 # CPACK CONFIGURATION                                                          #
 ################################################################################
 include(InstallRequiredSystemLibraries)
-set(CPACK_PACKAGE_NAME "${GAME_LNAME}")
+set(CPACK_PACKAGE_NAME ${GAME_LNAME})
 set(CPACK_PACKAGE_VENDOR ${GAME_CREATOR})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${GAME_DESCRIPTION})
 set(CPACK_PACKAGE_VERSION ${GAME_VERSION})
