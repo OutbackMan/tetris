@@ -45,16 +45,15 @@ void game_log__log(
 	time_t current_time = time(NULL);	
 	struct tm* local_time = localtime(&current_time);
 
-	GAME_LOCAL_PERSIST const size_t TIME_STRING_BUF_SIZE = 64;
-	char time_string_buf[TIME_STRING_BUF_SIZE];
+	char time_string_buf[64] = GAME_DEFAULT_INITIALISER;
 
 	GAME_LOCAL_PERSIST const char* TIME_FORMAT_STR = "%H:%M:%S";
 	size_t time_string_length = strftime(
-									time_string_buf,
-									sizeof(time_string_buf), 
-									TIME_FORMAT_STR, 
-									local_time
-								); 
+					      time_string_buf,
+					      sizeof(time_string_buf), 
+					      TIME_FORMAT_STR, 
+					      local_time
+					     ); 
 	time_string_buf[time_string_length] = '\0';
 	puts("STRFTIME()");
 	
@@ -78,13 +77,16 @@ void game_log__log(
 		puts("BEFORE FPRINTF()");
 		fprintf(
 			stderr, 
-			"%-8s %s%-5sANSI_COLOUR_CLEAR ANSI_COLOUR_GREY%s:%s:%sANSI_COLOUR_CLEAR ", 
+			"%-8s %s%-5s%s %s%s:%s:%s%s ", 
 			time_string_buf, 
 			__log.type_colours[log_type], 
 			__log.type_names[log_type], 
+			ANSI_COLOUR_CLEAR,
+			ANSI_COLOUR_GREY,
 			file_name, 
 			function_name, 
-			line_number
+			line_number,
+			ANSI_COLOUR_CLEAR
 		);
 		va_start(args, message_fmt);
 		vfprintf(stderr, message_fmt, args);
