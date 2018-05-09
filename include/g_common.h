@@ -25,12 +25,9 @@ License:
  * CMAKE DEFINITIONS
  *****************************************************************************/
 
-/* #undef GAME_BUILD_MODE_DEBUG */
-/* #undef GAME_BUILD_MODE_RELEASE */
-
 #define GAME_VERSION "3.11.1"
 #define GAME_BUG_REPORT_ADDRESS "<git-link>"
-#define GAME_NAME ""
+#define GAME_NAME "Game"
 #define GAME_UNAME "GAME"
 #define GAME_LNAME "game"
 #define GAME_BINARY_STRING "game"

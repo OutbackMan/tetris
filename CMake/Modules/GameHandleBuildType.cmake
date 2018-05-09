@@ -51,10 +51,10 @@ function(GameHandleBuildType target)
 		target_compile_options(${target} PUBLIC "$<$<CONFIG:Debug>:${GCC_CLANG_DEBUG_OPTIONS}>")
 
 		target_compile_options(${target} PUBLIC "$<$<CONFIG:Release>:${GCC_CLANG_RELEASE_OPTIONS}>")
-		set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,--gc-sections" PARENT_SCOPE)
+		target_link_libraries(${target} PUBLIC "$<$<CONFIG:Release>:-s -Wl,--gc-sections>")
 
 		target_compile_options(${target} PUBLIC "$<$<CONFIG:MinSizeRel>:${GCC_CLANG_MINSIZEREL_OPTIONS}>")
-		set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "-s -Wl,--gc-sections" PARENT_SCOPE)
+		target_link_libraries(${target} PUBLIC "$<$<CONFIG:Release>:-s -Wl,--gc-sections>")
 
 		target_compile_options(${target} PUBLIC "$<$<CONFIG:RelWithDebInfo>:${GCC_CLANG_RELWITHDEBINFO_OPTIONS}>")
 	endif(${CMAKE_C_COMPILER_ID} STREQUAL "GNU|Clang")

@@ -12,12 +12,13 @@
 cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 
 if(NOT ${CMAKE_SIZEOF_VOID_P} EQUAL 8)
-	message(FATAL_ERROR "GAME will only build for x86/64 systems.")
+	message(FATAL_ERROR "[GAME] Will only build for x86/64 systems.")
 	return()
 endif(NOT ${CMAKE_SIZEOF_VOID_P} EQUAL 8)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-  message(WARNING "GAME prefers out-of-tree builds.")
+	message(FATAL_ERROR "[GAME] Require out-of-tree builds.")
+	return()
 endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
@@ -44,7 +45,6 @@ target_include_directories(game PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-# make x64 specific
 find_package(SDL2x64 REQUIRED)
 target_include_directories(game PUBLIC ${SDL2x64_INCLUDE_DIRS})
 target_link_libraries(game ${SDL2x64_LIBRARIES})
@@ -52,7 +52,7 @@ target_link_libraries(game ${SDL2x64_LIBRARIES})
 set(GAME_CREATOR "Ryan McClue")
 set(GAME_VERSION "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}")
 set(GAME_BUG_REPORT_ADDRESS "<git-link>")
-set(GAME_LNAME "Game")
+set(GAME_NAME "Game")
 set(GAME_LNAME "game")
 set(GAME_UNAME "GAME")
 if(WINDOWS)
