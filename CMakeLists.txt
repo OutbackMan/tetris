@@ -2,9 +2,9 @@
 #@ Description  Cross platform 2D SDL game.
 #@ Usage: 
 #@ GENERAL:
-#@	1. mkdir build/ && cd build/ && cmake .. && cmake --build . --config Release
-#@	2. ctest <name>
-#@	3. cpack -C Release 
+#@	1. mkdir build/ && cd build/ && cmake .. && cmake --build . [--config <build-type>]
+#@	2. ctest [-R <test-suite>]
+#@	3. cpack [-C <build-type>]
 
 ################################################################################
 # CMAKE CONFIGURATION                                                          #
@@ -67,6 +67,7 @@ configure_file(
 ################################################################################
 # CTEST CONFIGURATION                                                          #
 ################################################################################
+
 enable_testing()
 
 set(_game_test_suites
@@ -75,23 +76,21 @@ set(_game_test_suites
 
 set(example_tests "test_a" "test_b")
 
-# aggregate test suite source files
 foreach(game_test_suite ${_game_test_suites})
 	list(APPEND _game_test_suite_sources tests/${game_test_suite}TestSuite.c)
 endforeach(game_test_suite)
 
 create_test_sourcelist(_game_sources game_test_driver.c ${_game_test_suite_sources})
 add_executable(game_test_driver ${_game_sources})
+target_link_libraries(game_test_driver ${SDL2_LIBRARIES})
 
-# generate test cases
 foreach(game_test_suite ${_game_test_suites})
 	foreach(game_test ${${game_test_suite}_tests})
 		add_test(NAME ${game_test_suite}_${game_test}
-			COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/game_test_driver ${game_test_suite}TestSuite ${game_test_suite}_${game_test}
+			COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/game_test_driver tests/${game_test_suite}TestSuite ${game_test_suite}_${game_test}
 		)
 	endforeach(game_test)
 endforeach(game_test_suite)
-# then run with: ctest -R collisions
 
 ################################################################################
 # CPACK CONFIGURATION                                                          #
