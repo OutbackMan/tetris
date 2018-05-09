@@ -28,9 +28,10 @@ License:
 /* #undef GAME_BUILD_MODE_DEBUG */
 /* #undef GAME_BUILD_MODE_RELEASE */
 
-#define GAME_VERSION ""
+#define GAME_VERSION "3.11.1"
 #define GAME_BUG_REPORT_ADDRESS "<git-link>"
-#define GAME_NAME ""
+#define GAME_UNAME ""
+#define GAME_LNAME ""
 #define GAME_BINARY_STRING "game"
 #define GAME_DESCRIPTION "Cross platform 2D SDL game."
 #define GAME_CREATOR "Ryan McClue"
