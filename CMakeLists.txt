@@ -26,7 +26,7 @@ project(GAME)
 enable_language(C)
 
 include(GameHandleVersion)
-include(GameHandleBuildType)
+GameHandleVersion()
 
 set(_game_sources
 	src/g_main.c
@@ -36,15 +36,18 @@ add_executable(game
 	${_game_sources}
 )
 
+include(GameHandleBuildType)
+GameHandleBuildType(game)
+
 target_include_directories(game PUBLIC
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
 
 # make x64 specific
-find_package(SDL2 REQUIRED)
-target_include_directories(game PUBLIC ${SDL2_INCLUDE_DIRS})
-target_link_libraries(game ${SDL2_LIBRARIES})
+find_package(SDL2x64 REQUIRED)
+target_include_directories(game PUBLIC ${SDL2x64_INCLUDE_DIRS})
+target_link_libraries(game ${SDL2x64_LIBRARIES})
 
 set(GAME_CREATOR "Ryan McClue")
 set(GAME_VERSION "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}")
@@ -82,7 +85,7 @@ endforeach(game_test_suite)
 
 create_test_sourcelist(_game_sources game_test_driver.c ${_game_test_suite_sources})
 add_executable(game_test_driver ${_game_sources} tests/g_test-helpers.c)
-target_link_libraries(game_test_driver ${SDL2_LIBRARIES})
+target_link_libraries(game_test_driver ${SDL2x64_LIBRARIES})
 
 foreach(game_test_suite ${_game_test_suites})
 	foreach(game_test ${${game_test_suite}_tests})
