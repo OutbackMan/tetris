@@ -2,7 +2,7 @@
 
 static GAME_TEST_STATUS example_test_a(void)
 {
-	return GAME_TEST_ASSERT(10 != 10);
+	return GAME_TEST_ASSERT(10 == 10);
 }
 
 static GAME_TEST_STATUS example_test_b(void)
