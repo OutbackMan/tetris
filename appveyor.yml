@@ -38,7 +38,7 @@ build_script:
   - |-
     cd %APPVEYOR_BUILD_FOLDER%
     mkdir appveyor_build
-	cd appveyor_build
+    cd appveyor_build
     cmake %CMAKE_ARGS% ..
     cmake --build . -- -j2
     ctest -j2
