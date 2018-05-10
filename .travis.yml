@@ -119,6 +119,6 @@ before_script:
 
 script:
   - mkdir travis_build && cd travis_build/
-  - cmake -DCMAKE_BUILD_TYPE=Release..
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
   - cmake --build . -- -j2
   - ctest -j2
