@@ -52,8 +52,16 @@ License:
 	} while (0);
 
 #define GAME_NO_DEFAULT_CASE
+
 #if GAME_BUILD_MODE_DEBUG
-#define GAME_BREAKPOINT() raise(SIGABRT)
+#ifdef _MSC_VER
+#include <intrin.h>
+#else
+// ~/.gdbinit --> break __debugbreak
+#include <stdlib.h>
+static inline void __debugbreak(void) { exit(EXIT_FAILURE); }
+#endif
+#define GAME_BREAKPOINT() __debugbreak()
 #else
 #define GAME_BREAKPOINT() (void)0
 #endif

@@ -2,7 +2,7 @@
 #@ Description  Cross platform 2D SDL game.
 #@ Usage: 
 #@ GENERAL:
-#@	1. mkdir build/ && cd build/ && cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . [--config <build-type>]
+#@	1. mkdir build/ && cd build/ && cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build .
 #@	2. ctest [-R <test-suite>]
 #@	3. cpack [-C <build-type>]
 
@@ -26,7 +26,8 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 project(GAME)
 enable_language(C)
 
-include(GameHandleVersion)
+include(HandleVersion)
+HandleVersion()
 
 set(_game_sources
 	src/g_main.c
@@ -37,7 +38,8 @@ add_executable(game
 	${_game_sources}
 )
 
-include(GameHandleBuildType)
+include(HandleBuildType)
+HandleBuildType(game)
 
 target_include_directories(game PUBLIC
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
