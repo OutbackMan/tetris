@@ -55,7 +55,6 @@ void game_log__log(
 					      local_time
 					     ); 
 	time_string_buf[time_string_length] = '\0';
-	puts("STRFTIME()");
 	
 	va_list args = GAME_DEFAULT_INITIALISER;
 
@@ -74,10 +73,9 @@ void game_log__log(
 		va_end(args);
 		fprintf(__log.log_file, "\n");
 	} else {
-		puts("BEFORE FPRINTF()");
 		fprintf(
 			stderr, 
-			"%-8s %s%-5s%s %s%s:%s:%s%s ", 
+			"%-8s %s%-5s%s %s%s:%s:%d%s ", 
 			time_string_buf, 
 			__log.type_colours[log_type], 
 			__log.type_names[log_type], 

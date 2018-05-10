@@ -5,12 +5,13 @@
 
 #include "g_common.h"
 #include "utils/g_log.h"
+#include "utils/g_assert.h"
 
 int main(int argc, char* argv[argc + 1])
 {
 	game_log_init((GAME_LOG_MODE)DEBUG, NULL);
 
-	game_log__log(INFO, "test-file.c", "test_function", 10, "hi %s", "ryan");
+	GAME_ASSERT(10 != 10, "msg %s", "message");
 
 	return EXIT_SUCCESS;	
 }

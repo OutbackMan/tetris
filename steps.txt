@@ -1,7 +1,7 @@
 windows:
-	--> .c, .h
+	--> build terminal and debugger
 	--> main.c and any other relevent app runners
-	--> build (cmake), i.e. terminal
+	--> .c, .h
 	--> test files
 
 1. Complete CTest project scaffold
