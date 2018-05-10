@@ -24,9 +24,9 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - gcc-4.9
+            - gcc-7
       env:
-        - MATRIX_EVAL="CC=gcc-4.9"
+        - MATRIX_EVAL="CC=gcc-7"
 
 before_install:
   - 'if [ ${TRAVIS_OS_NAME} == "linux" ]; then
