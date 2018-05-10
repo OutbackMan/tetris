@@ -1,56 +1,45 @@
-version: "{branch}.{build}"
+version: '{branch}.{build}'
 
 branches:
   only:
     - master
-	- release
+    - release
 
 configuration: "Release"
-
 platform: "x64"
 
-shallow_copy: "true"
 clone_depth: "1"
 
 environment:
   matrix:
-	- APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2017"
-	  CMAKE_ARGS: -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 15 2017"
-
-	- APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2015"
-	  CMAKE_ARGS: -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 14 2015"
-
-	- APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2013"
-	  CMAKE_ARGS: -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 12 2013"
-
-	- APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2012"
-	  CMAKE_ARGS: -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 11 2012"
-
-	- APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2010"
-	  CMAKE_ARGS: -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 10 2010"
-
-	- APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2008"
-	  CMAKE_ARGS: -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 9 2008"
-
-  before_build:
-	- cmd: >-
-	if exists c:\project_msvc set NEEDSDEPENDS=rem
-	%NEEDSDEPENDS% mkdir c:\project_msvc\include\SDL2
-	%NEEDSDEPENDS% mkdir c:\project_msvc\lib
-
-	- cmd: >- 
-	%NEEDSDEPENDS% appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.8-VC.zip
-	%NEEDSDEPENDS% 7z x SDL2-devel-2.0.8-VC.zip > nul
-    %NEEDSDEPENDS% copy SDL2-2.0.8\include\* c:\project_msvc\include > nul
-    %NEEDSDEPENDS% copy SDL2-2.0.8\lib\x64\* c:\project_msvc\lib > nul
-
+  - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2017"
+    CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release -G \"Visual Studio 15 2017\""
+  - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2015"
+    CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release -G \"Visual Studio 14 2015\""
+  - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2013"
+    CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release -G \"Visual Studio 12 2013\""
+  - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2012"
+    CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release -G \"Visual Studio 11 2012\""
+  - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2010"
+    CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release -G \"Visual Studio 10 2010\""
+  - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2008"
+    CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release -G \"Visual Studio 9 2008\""
+before_build:
+  - |-
+    if exist c:\project_mscv set NEEDDEPENDS=rem
+    %NEEDDEPENDS% mkdir c:\project_msvc\include\SDL2
+    %NEEDDEPENDS% mkdir c:\project_msvc\lib
+    %NEEDDEPENDS% cd %TEMP%
+  - |-
+    %NEEDDEPENDS% %MSVC% appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.4-VC.zip
+    %NEEDDEPENDS% %MSVC% 7z x SDL2-devel-2.0.4-VC.zip > nul
+    %NEEDDEPENDS% %MSVC% copy SDL2-2.0.4\include\* c:\project_msvc\include > nul
+    %NEEDDEPENDS% %MSVC% copy SDL2-2.0.4\lib\x64\* c:\project_msvc\lib > nul
 build_script:
-- cmd: >-
-  mkdir %APPVEYOR_BUILD_FOLDER%\build
-  cd %APPVEYOR_BUILD_FOLDER%\build
-  
-  cmake -DCMAKE_PREFIX_PATH=c:\project_msvc %CMAKE_ARGS%
-  
-  cmake --build . -- -j2
-test_script:
-  - cmd: ctest -C Release
+  - |-
+    cd %APPVEYOR_BUILD_FOLDER%
+	mkdir appveyor_build
+	cd appveyor_build
+    cmake %CMAKE_ARGS% ..
+    cmake --build . -- -j2
+    ctest -j2
