@@ -26,14 +26,14 @@ before_build:
   - |-
     appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.4-VC.zip
     7z x SDL2-devel-2.0.4-VC.zip > nul
-    copy SDL2-2.0.4\include\* c:\project_msvc\include > nul
+    copy SDL2-2.0.4\include\* c:\project_msvc\include\SDL2 > nul
     copy SDL2-2.0.4\lib\x64\* c:\project_msvc\lib > nul
 build_script:
   - |-
     cd %APPVEYOR_BUILD_FOLDER%
     mkdir appveyor_build
     cd appveyor_build
-    set SDL2_DIR=c:\project_msvc\include 
+    set SDL2_DIR=c:\project_msvc\include\SDL2
     set SDL2_LIB=c:\project_msvc\lib
     cmake %CMAKE_ARGS% ..
     cmake --build . -- /m
