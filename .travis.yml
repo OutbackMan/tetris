@@ -41,6 +41,7 @@ before_script:
   - eval "${MATRIX_EVAL}"
 
 script:
+  - mkdir build && cd build/
   - cmake .
   - cmake --build . -- -j2
   - ctest -j2
