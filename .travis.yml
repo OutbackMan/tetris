@@ -55,7 +55,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-4.0
           packages:
-            - clang-7.0
+            - clang-4.0
       env:
         - MATRIX_EVAL="CC=clang-4.0"
     - os: linux
@@ -66,7 +66,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-5.0
           packages:
-            - clang-8.0
+            - clang-5.0
       env:
         - MATRIX_EVAL="CC=clang-5.0"
     - os: linux
@@ -77,7 +77,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-6.0
           packages:
-            - clang-9.0
+            - clang-6.0
       env:
         - MATRIX_EVAL="CC=clang-6.0"
     - os: osx
@@ -93,17 +93,17 @@ matrix:
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew update && brew install gcc-5 && CC=gcc-5"
+        - MATRIX_EVAL="brew update && brew install gcc5 && CC=gcc5"
     - os: osx
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew update && brew install gcc-6 && CC=gcc-6"
+        - MATRIX_EVAL="brew update && brew install gcc6 && CC=gcc6"
     - os: osx
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew update && brew install gcc-7 && CC=gcc-7"
+        - MATRIX_EVAL="brew update && brew install gcc7 && CC=gcc7"
 
 before_install:
   - 'if [ ${TRAVIS_OS_NAME} == "linux" ]; then
