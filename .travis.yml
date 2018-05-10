@@ -93,17 +93,17 @@ matrix:
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew update && brew install gcc5 && CC=gcc5"
+        - MATRIX_EVAL="brew update && brew install gcc5 && CC=gcc-5"
     - os: osx
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew update && brew install gcc6 && CC=gcc6"
+        - MATRIX_EVAL="brew update && brew install gcc6 && CC=gcc-6"
     - os: osx
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew update && brew install gcc7 && CC=gcc7"
+        - MATRIX_EVAL="brew update && brew install gcc7 && CC=gcc-7"
 
 before_install:
   - 'if [ ${TRAVIS_OS_NAME} == "linux" ]; then
