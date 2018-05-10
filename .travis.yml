@@ -42,6 +42,6 @@ before_script:
 
 script:
   - mkdir travis_build && cd travis_build/
-  - cmake .
+  - cmake ..
   - cmake --build . -- -j2
   - ctest -j2
