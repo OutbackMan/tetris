@@ -53,33 +53,33 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-7.0
+            - llvm-toolchain-trusty-4.0
           packages:
             - clang-7.0
       env:
-        - MATRIX_EVAL="CC=clang-7.0"
+        - MATRIX_EVAL="CC=clang-4.0"
     - os: linux
       compiler: clang
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-8.0
+            - llvm-toolchain-trusty-5.0
           packages:
             - clang-8.0
       env:
-        - MATRIX_EVAL="CC=clang-8.0"
+        - MATRIX_EVAL="CC=clang-5.0"
     - os: linux
       compiler: clang
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-9.0
+            - llvm-toolchain-trusty-6.0
           packages:
             - clang-9.0
       env:
-        - MATRIX_EVAL="CC=clang-9.0"
+        - MATRIX_EVAL="CC=clang-6.0"
     - os: osx
       compiler: clang
       osx_image: xcode7.3
@@ -93,17 +93,17 @@ matrix:
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew install gcc-5 && CC=gcc-5"
+        - MATRIX_EVAL="brew update && brew install gcc-5 && CC=gcc-5"
     - os: osx
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew install gcc-6 && CC=gcc-6"
+        - MATRIX_EVAL="brew update && brew install gcc-6 && CC=gcc-6"
     - os: osx
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew install gcc-7 && CC=gcc-7"
+        - MATRIX_EVAL="brew update && brew install gcc-7 && CC=gcc-7"
 
 before_install:
   - 'if [ ${TRAVIS_OS_NAME} == "linux" ]; then
@@ -111,7 +111,8 @@ before_install:
 		sudo apt-get update -qq || travis_terminate 1;
 		sudo apt-get install -qq cmake libsdl2-dev || travis_terminate 1;
 	else
-		brew install sdl2 || travis_terminate 1;
+        brew update || travis_terminate 1;
+        brew install sdl2 || travis_terminate 1;
     fi'
 
 before_script:
