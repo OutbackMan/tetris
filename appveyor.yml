@@ -36,5 +36,5 @@ build_script:
     set SDL2_DIR=c:\project_msvc\include 
     set SDL2_LIB=c:\project_msvc\lib
     cmake %CMAKE_ARGS% ..
-    cmake --build . -- -j2
+    cmake --build . -- /m
     ctest -j2
