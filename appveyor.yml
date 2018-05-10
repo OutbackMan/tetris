@@ -26,19 +26,18 @@ environment:
     CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release -G \"Visual Studio 9 2008\""
 before_build:
   - |-
-    if exist c:\project_mscv set NEEDDEPENDS=rem
-    %NEEDDEPENDS% mkdir c:\project_msvc\include\SDL2
-    %NEEDDEPENDS% mkdir c:\project_msvc\lib
-    %NEEDDEPENDS% cd %TEMP%
+    mkdir c:\project_msvc\include\SDL2
+    mkdir c:\project_msvc\lib
+    cd %TEMP%
   - |-
-    %NEEDDEPENDS% %MSVC% appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.4-VC.zip
-    %NEEDDEPENDS% %MSVC% 7z x SDL2-devel-2.0.4-VC.zip > nul
-    %NEEDDEPENDS% %MSVC% copy SDL2-2.0.4\include\* c:\project_msvc\include > nul
-    %NEEDDEPENDS% %MSVC% copy SDL2-2.0.4\lib\x64\* c:\project_msvc\lib > nul
+    appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.4-VC.zip
+    7z x SDL2-devel-2.0.4-VC.zip > nul
+    copy SDL2-2.0.4\include\* c:\project_msvc\include > nul
+    copy SDL2-2.0.4\lib\x64\* c:\project_msvc\lib > nul
 build_script:
   - |-
     cd %APPVEYOR_BUILD_FOLDER%
-	mkdir appveyor_build
+    mkdir appveyor_build
 	cd appveyor_build
     cmake %CMAKE_ARGS% ..
     cmake --build . -- -j2
