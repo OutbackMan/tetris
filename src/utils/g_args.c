@@ -55,7 +55,7 @@ void game_args_print_syntax(FILE* output_stream)
 	char arg_syntax_buf[512] = "Usage: "GAME_BINARY_STRING" ";
 
 	GAME_ARG_TABLE_ITERATE(_, arg) {
-		char arg_option_char_buf[32] = GAME_DEFAULT_INITIALISER;	
+		char arg_option_char_buf[32];	
 
 		snprintf(arg_option_char_buf, sizeof(arg_option_char_buf), "[-%c%s] ", arg.option_char, game_args__get_arg_type_string(arg.type));
 
@@ -144,7 +144,7 @@ void game_args__parse_arg(GAME__ArgInstance* arg, char* arg_char)
 			++arg_char;
 		}	
 		
-		char file_name[32] = GAME_DEFAULT_INITIALISER;
+		char file_name[32];
 		strncpy(file_name, str_arg_start, (size_t)(str_arg_start - arg_char));
 			
 		arg.value = fopen(file_name, "a");

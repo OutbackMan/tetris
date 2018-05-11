@@ -45,7 +45,7 @@ void game_log__log(
 	time_t current_time = time(NULL);	
 	struct tm* local_time = localtime(&current_time);
 
-	char time_string_buf[64] = GAME_DEFAULT_INITIALISER;
+	char time_string_buf[64];
 
 	GAME_LOCAL_PERSIST const char* TIME_FORMAT_STR = "%H:%M:%S";
 	size_t time_string_length = strftime(
@@ -56,7 +56,7 @@ void game_log__log(
 					     ); 
 	time_string_buf[time_string_length] = '\0';
 	
-	va_list args = GAME_DEFAULT_INITIALISER;
+	va_list args;
 
 	if (__log.log_file != NULL) {
 		fprintf(
