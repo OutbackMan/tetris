@@ -93,7 +93,7 @@ matrix:
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew update && brew install gcc5 --without-multilib --without-cxx --without-objc --without-objcxx --without-java && CC=gcc-5"
+        - MATRIX_EVAL="brew update && brew install gcc5 && CC=gcc-5"
     - os: osx
       compiler: gcc
       osx_image: xcode8
@@ -103,7 +103,7 @@ matrix:
       compiler: gcc
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew update && brew install gcc7 && CC=gcc-7"
+        - MATRIX_EVAL="brew update && brew install gcc@7 && CC=gcc-7"
 
 before_install:
   - 'if [ ${TRAVIS_OS_NAME} == "linux" ]; then

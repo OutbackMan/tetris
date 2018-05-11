@@ -32,10 +32,10 @@ void game_log_init(GAME_LOG_MODE log_mode, FILE* log_file)
 
 void game_log__log(
 	GAME_LOG_TYPE log_type, 
-	const char* restrict file_name, 
-	const char* restrict function_name, 
+	const char* file_name, 
+	const char* function_name, 
 	const int line_number, 
-	const char* restrict message_fmt, ...
+	const char* message_fmt, ...
 )
 {
 	if (__log.in_release_mode && log_type != FATAL) {

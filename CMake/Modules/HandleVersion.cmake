@@ -6,7 +6,7 @@ set(__handle_version_cmake__ TRUE)
 function(HandleVersion)
 	find_package(Git)
 	if(${GIT_FOUND} AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
-		message(STATUS "[GAME] Extracting version information from 'git describe'.")
+		message(STATUS "[HandleVersion] Extracting version information from 'git describe'.")
 
 		execute_process(
 			COMMAND ${GIT_EXECUTABLE} describe --tags
@@ -28,6 +28,6 @@ function(HandleVersion)
 		set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_MINOR_VERSION} PARENT_SCOPE)
 		set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PATCH_VERSION} PARENT_SCOPE)
 	else(${GIT_FOUND})
-		message(WARNING "[GAME] Unable to find git, and therefore game version number.")
+		message(WARNING "[HandleVersion] Unable to find git, and therefore game version number.")
 	endif(${GIT_FOUND} AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
 endfunction(HandleVersion)

@@ -57,7 +57,7 @@ License:
 #ifdef _MSC_VER
 #include <intrin.h>
 #else
-// ~/.gdbinit --> break __debugbreak
+// ~/.gdbinit --> break __debugbreak; step backwards
 #include <stdlib.h>
 static inline void __debugbreak(void) { exit(EXIT_FAILURE); }
 #endif
@@ -131,9 +131,7 @@ typedef int64_t int64;
 #define GAME_DESIGNATED __attribute__((designated_init))
 #define GAME_FLATTEN __attribute__((flatten))
 #elif defined (_MSC_VER)
-#define _CRT_SECURE_NO_WARNINGS
 #define inline __inline
-#define restrict __restrict
 #define GAME_ALIGN(val) __declspec(align(val))
 #define GAME_DEPRECATED __declspec(deprecated)
 #else

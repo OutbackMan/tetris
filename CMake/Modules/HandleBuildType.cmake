@@ -13,7 +13,7 @@ function(HandleBuildType target)
 	target_compile_definitions(${target} PUBLIC $<$<CONFIG:MinSizeRel>:GAME_BUILD_MODE_RELEASE>)
 	target_compile_definitions(${target} PUBLIC $<$<CONFIG:RelWithDebInfo>:GAME_BUILD_MODE_DEBUG>)
 
-	if(${CMAKE_C_COMPILER_ID} STREQUAL "GNU|Clang")
+	if(${CMAKE_C_COMPILER_ID} MATCHES "GNU|Clang")
 		string(CONCAT
 			GCC_CLANG_COMMON_OPTIONS
 			"-Wall -Wextra -Wpendantic -std=c99 -Wformat -Wshadow -Wcast-qual" 
@@ -32,6 +32,7 @@ function(HandleBuildType target)
 			" -Os -ffast-math -s -fmerge-all-constants -flto -fdata-sections"
 			" -ffunction-sections -mtune=cpu-type -funsafe-loop-optimizations"
 		)
+
 		string(CONCAT 
 			GCC_CLANG_RELWITHDEBINFO_OPTIONS
 			${GCC_CLANG_COMMON_OPTIONS}
@@ -61,5 +62,9 @@ function(HandleBuildType target)
 		target_link_libraries(${target} PUBLIC $<$<CONFIG:Release>:-s -Wl,--gc-sections>)
 
 		target_compile_options(${target} PUBLIC $<$<CONFIG:RelWithDebInfo>:${GCC_CLANG_RELWITHDEBINFO_OPTIONS}>)
-	endif(${CMAKE_C_COMPILER_ID} STREQUAL "GNU|Clang")
+	elseif(${CMAKE_C_COMPILER_ID} STREQUAL "MSVC")
+		target_compile_definitions(${target} PUBLIC _CRT_SECURE_NO_WARNINGS)
+	else(${CMAKE_C_COMPILER_ID} MATCHES "GNU|Clang")
+		message(FATAL_ERROR "[HandleBuildType] Your compiler is not either of the supported gcc, clang or msvc")
+	endif(${CMAKE_C_COMPILER_ID} MATCHES "GNU|Clang")
 endfunction(HandleBuildType)

@@ -18,10 +18,10 @@ typedef enum {
 
 void game_log__log(
 	GAME_LOG_TYPE log_level, 
-	const char* restrict file_name, 
-	const char* restrict function_name, 
+	const char* file_name, 
+	const char* function_name, 
 	const int line_number, 
-	const char* restrict message_fmt, ...
+	const char* message_fmt, ...
 );
 
 void game_log_init(GAME_LOG_MODE log_mode, FILE* log_file);
