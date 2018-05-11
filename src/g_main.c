@@ -8,6 +8,8 @@
 #include "utils/g_assert.h"
 #include "utils/g_status.h"
 
+GAME_STATUS example(void);
+
 GAME_STATUS example(void)
 {
 	GAME_LOG_INFO("hi there %s", "user");
@@ -15,7 +17,7 @@ GAME_STATUS example(void)
 	return SUCCESS;
 }
 
-int main(const int argc, const char* argv)
+int main(const int argc, const char** argv)
 {
 	game_log_init((GAME_LOG_MODE)DEBUG, NULL);
 
