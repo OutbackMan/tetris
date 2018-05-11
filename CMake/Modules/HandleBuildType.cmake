@@ -29,7 +29,7 @@ function(HandleBuildType target)
 		string(CONCAT 
 			GCC_CLANG_MINSIZEREL_OPTIONS
 			${GCC_CLANG_COMMON_OPTIONS}
-			" -Os -ffast-math -s -fmerge-all-constants -flto -fdata-sections"
+			" -Os -ffast-math -s -fmerge-all-constants -fdata-sections"
 			" -ffunction-sections -mtune=native -funsafe-loop-optimizations"
 		)
 
@@ -43,16 +43,19 @@ function(HandleBuildType target)
 			GCC_CLANG_RELEASE_OPTIONS
 			${GCC_CLANG_COMMON_OPTIONS}
 			" -O3 -ffast-math -fmerge-all-constants"
-			" -flto -fdata-sections -ffunction-sections -mtune=native"
+			" -fdata-sections -ffunction-sections -mtune=native"
 		)
 
 		if(${CMAKE_C_COMPILER_ID} MATCHES "GNU")
 			string(CONCAT GCC_CLANG_DEBUG_OPTIONS ${GCC_CLANG_DEBUG_OPTIONS} " -fsanitize=leak")
-			string(CONCAT GCC_CLANG_RELEASE_OPTIONS ${GCC_CLANG_RELEASE_OPTIONS} " -funsafe-loop-optimizations")
+			string(CONCAT GCC_CLANG_RELEASE_OPTIONS ${GCC_CLANG_RELEASE_OPTIONS} " -funsafe-loop-optimizations -flto")
+			string(CONCAT GCC_CLANG_RELWITHDEBINFO_OPTIONS ${GCC_CLANG_RELEASE_OPTIONS} " -flto")
 		else(${CMAKE_C_COMPILER_ID} MATCHES "GNU")
+			if(APPLE)
+				string(CONCAT GCC_CLANG_RELEASE_OPTIONS ${GCC_CLANG_RELEASE_OPTIONS} " -flto")
+				string(CONCAT GCC_CLANG_RELWITHDEBINFO_OPTIONS ${GCC_CLANG_RELEASE_OPTIONS} " -flto")
+			endif(APPLE)
 			string(CONCAT GCC_CLANG_DEBUG_OPTIONS ${GCC_CLANG_DEBUG_OPTIONS} " -fsanitize=dataflow -fsanitize=safe-stack")
-			target_link_libraries(${target} PUBLIC $<$<CONFIG:Release>:"use-ld=gold">)
-			target_link_libraries(${target} PUBLIC $<$<CONFIG:MinSizeRel>:"use-ld=gold">)
 		endif(${CMAKE_C_COMPILER_ID} MATCHES "GNU")
 
 		string(REPLACE " " ";" GCC_CLANG_DEBUG_OPTIONS ${GCC_CLANG_DEBUG_OPTIONS})
