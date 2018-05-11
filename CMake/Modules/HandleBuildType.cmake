@@ -16,7 +16,7 @@ function(HandleBuildType target)
 	if(${CMAKE_C_COMPILER_ID} MATCHES "GNU|Clang")
 		string(CONCAT
 			GCC_CLANG_COMMON_OPTIONS
-			"-Wall -Wextra -Wpendantic -std=c99 -Wformat -Wshadow -Wcast-qual" 
+			"-Wall -Wextra -Wpedantic -std=c99 -Wformat -Wshadow -Wcast-qual" 
 			" -Wmissing-prototypes -msse2 -msse3 -march=native -ffat-lto-objects"
 		)
 
@@ -30,7 +30,7 @@ function(HandleBuildType target)
 			GCC_CLANG_MINSIZEREL_OPTIONS
 			${GCC_CLANG_COMMON_OPTIONS}
 			" -Os -ffast-math -s -fmerge-all-constants -flto -fdata-sections"
-			" -ffunction-sections -mtune=cpu-type -funsafe-loop-optimizations"
+			" -ffunction-sections -mtune=native -funsafe-loop-optimizations"
 		)
 
 		string(CONCAT 
@@ -43,23 +43,30 @@ function(HandleBuildType target)
 			GCC_CLANG_RELEASE_OPTIONS
 			${GCC_CLANG_COMMON_OPTIONS}
 			" -O3 -ffast-math -fmerge-all-constants"
-			" -flto -fdata-sections -ffunction-sections -mtune=cpu-type"
+			" -flto -fdata-sections -ffunction-sections -mtune=native"
 			" -funsafe-loop-optimizations"
 		)
 
 		if(${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
-			string(CONCAT GCC_CLANG_DEBUG_OPTIONS " -fsanitize=leak")
+			string(CONCAT GCC_CLANG_DEBUG_OPTIONS ${GCC_CLANG_DEBUG_OPTIONS} " -fsanitize=leak")
 		else(${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
-			string(CONCAT GCC_CLANG_DEBUG_OPTIONS " -fsanitize=dataflow -fsanitize=safe-stack")
+			string(CONCAT GCC_CLANG_DEBUG_OPTIONS ${GCC_CLANG_DEBUG_OPTIONS} " -fsanitize=dataflow -fsanitize=safe-stack")
 		endif(${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
 
+		string(REPLACE " " ";" GCC_CLANG_DEBUG_OPTIONS ${GCC_CLANG_DEBUG_OPTIONS})
+		string(REPLACE " " ";" GCC_CLANG_RELEASE_OPTIONS ${GCC_CLANG_RELEASE_OPTIONS})
+		string(REPLACE " " ";" GCC_CLANG_MINSIZEREL_OPTIONS ${GCC_CLANG_MINSIZEREL_OPTIONS})
+		string(REPLACE " " ";" GCC_CLANG_RELWITHDEBINFO_OPTIONS ${GCC_CLANG_RELWITHDEBINFO_OPTIONS})
+
 		target_compile_options(${target} PUBLIC $<$<CONFIG:Debug>:${GCC_CLANG_DEBUG_OPTIONS}>)
+		target_link_libraries(${target} PUBLIC $<$<CONFIG:Debug>:"asan">)
+		target_link_libraries(${target} PUBLIC $<$<CONFIG:Debug>:"ubsan">)
 
 		target_compile_options(${target} PUBLIC $<$<CONFIG:Release>:${GCC_CLANG_RELEASE_OPTIONS}>)
-		target_link_libraries(${target} PUBLIC $<$<CONFIG:Release>:-s -Wl,--gc-sections>)
+		set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,--gc-sections" PARENT_SCOPE)
 
 		target_compile_options(${target} PUBLIC $<$<CONFIG:MinSizeRel>:${GCC_CLANG_MINSIZEREL_OPTIONS}>)
-		target_link_libraries(${target} PUBLIC $<$<CONFIG:Release>:-s -Wl,--gc-sections>)
+		set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "-s -Wl,--gc-sections" PARENT_SCOPE)
 
 		target_compile_options(${target} PUBLIC $<$<CONFIG:RelWithDebInfo>:${GCC_CLANG_RELWITHDEBINFO_OPTIONS}>)
 	elseif(${CMAKE_C_COMPILER_ID} STREQUAL "MSVC")

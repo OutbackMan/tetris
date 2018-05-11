@@ -3,5 +3,6 @@ windows:
 	--> main.c and any other relevent app runners
 	--> .c, .h
 	--> test files
+	--> test idea scratchpad terminal
 
 1. Complete CTest project scaffold

@@ -15,7 +15,7 @@ GAME_STATUS example(void)
 	return SUCCESS;
 }
 
-int main(const int argc, const char* argv[argc + 1])
+int main(const int argc, const char* argv)
 {
 	game_log_init((GAME_LOG_MODE)DEBUG, NULL);
 
