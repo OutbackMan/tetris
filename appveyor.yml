@@ -33,7 +33,7 @@ build_script:
     cd %APPVEYOR_BUILD_FOLDER%
     mkdir appveyor_build
     cd appveyor_build
-    set SDL2_DIR=c:\project_msvc\include\SDL2
+    set SDL2_DIR=c:\project_msvc\include
     set SDL2_LIB=c:\project_msvc\lib
     cmake %CMAKE_ARGS% ..
     cmake --build . -- /m

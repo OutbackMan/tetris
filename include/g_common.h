@@ -19,6 +19,7 @@ License:
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <signal.h>
 
 /******************************************************************************
@@ -43,7 +44,7 @@ License:
 
 #define GAME_INTERNAL static
 #define GAME_LOCAL_PERSIST static
-#define GAME_DEFAULT_INITIALISER {0,}
+#define GAME_DEFAULT_INITIALISER {0}
 
 #define GAME_LEAVE(func_leave_code) \
 	do { \
@@ -58,12 +59,11 @@ License:
 #include <intrin.h>
 #else
 // ~/.gdbinit --> break __debugbreak; step backwards
-#include <stdlib.h>
 static inline void __debugbreak(void) { exit(EXIT_FAILURE); }
 #endif
 #define GAME_BREAKPOINT() __debugbreak()
 #else
-#define GAME_BREAKPOINT() (void)0
+#define GAME_BREAKPOINT() exit(EXIT_FAILURE)
 #endif
 
 /******************************************************************************
@@ -94,13 +94,7 @@ typedef int64_t int64;
 		GAME_STRINGIFY(__clang_minor__)"." \
 		GAME_STRINGIFY(__clang_patchlevel__)
 #elif defined(_MSC_VER)
-#if _MSC_VER <= 1500
-#define GAME_COMPILER "MSVC 2008"
-#elif _MSC_VER <= 1600
-#define GAME_COMPILER "MSVC 2010"
-#elif _MSC_VER <= 1700
-#define GAME_COMPILER "MSVC 2012"
-#elif _MSC_VER <= 1800
+#if _MSC_VER <= 1800
 #define GAME_COMPILER "MSVC 2013"
 #elif _MSC_VER <= 1900
 #define GAME_COMPILER "MSVC 2015"

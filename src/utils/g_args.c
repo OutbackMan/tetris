@@ -1,6 +1,8 @@
 #include "utils/g_args.h"
 
+#include "g_common.h"
 #include "utils/g_assert.h"
+#include "utils/g_log.h"
 
 GAME_ArgTable game_args_default_arg_table = {
 	.length = 5,
@@ -36,10 +38,10 @@ GAME_ArgTable game_args_default_arg_table = {
 	}
 };
 
-#define GAME_ARG_TABLE_ITERATE(arg_index, arg) \
+#define GAME_ARGS__ARG_TABLE_ITERATE(arg_index, arg) \
 	for ( \
 			size_t arg_index = 1; \
-			GAME__ArgInstance arg = game_args_arg_table[arg_index]; \
+			GAME__ArgInstance arg = game_args_default_arg_table[arg_index]; \
 			arg_index < arg_table.length; \
 			++arg_index \
 		)
@@ -91,8 +93,13 @@ void game_args_print_glossary(FILE* output_stream)
 	}
 }
 
-void game_args_handle(int argc, char** argv)
+void game_args_parse(const int argc, const char** argv)
 {
+	if (argc < 1) {
+		GAME_LOG_INFO("%s", "No arguments provided. Using defaults");
+		return;
+	}
+
 #if defined(_WIN32)
 	const char ARG_START = '\\';
 #else
@@ -103,7 +110,7 @@ void game_args_handle(int argc, char** argv)
 		for (char* arg_char = argv[arg_index] + 1; *arg_char != '\0'; ++arg_char) {
 			GAME_ARG_TABLE_ITERATE(_, arg) {
 				if (*arg_char == arg.option_char) {
-					game_args__parse_arg(&args, arg_char);	
+					game_args__parse_arg(&arg, arg_char);	
 				} else {
 					fprintf(stderr, "Illegal option %c\n", *arg_char);
 					fprintf(stderr, "Try '%s %cH' for more information.\n", GAME_BINARY_STRING, ARG_START);
@@ -121,8 +128,8 @@ void game_args__parse_arg(GAME__ArgInstance* arg, char* arg_char)
 	switch(arg.type) {
 	case ARG_INT:
 		while (isdigit(*arg_char)) {
-			arg.value *= 10;
-			arg.value += *arg_char - '0';
+			arg->value *= 10;
+			arg->value += *arg_char - '0';
 			++arg_char;
 		}	
 		break;
