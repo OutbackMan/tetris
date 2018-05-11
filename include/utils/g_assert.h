@@ -5,7 +5,7 @@
 #include "utils/g_log.h"
 
 #define GAME_ASSERT(cond, msg, ...) \
-	if ((!cond)) { GAME_LOG_FATAL(msg, __VA_ARGS__); GAME_BREAKPOINT(); }
+	if (!(cond)) { GAME_LOG_FATAL(msg, __VA_ARGS__); GAME_BREAKPOINT(); }
 
 #define GAME_IMPLIES(cond1, cond2) \
 	(!(cond1) || (cond2))

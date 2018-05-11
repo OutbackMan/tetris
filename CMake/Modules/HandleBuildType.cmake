@@ -17,7 +17,7 @@ function(HandleBuildType target)
 		string(CONCAT
 			GCC_CLANG_COMMON_OPTIONS
 			"-Wall -Wextra -Wpedantic -std=c99 -Wformat -Wshadow -Wcast-qual" 
-			" -Wmissing-prototypes -msse2 -msse3 -march=native -ffat-lto-objects"
+			" -Wmissing-prototypes -msse2 -msse3 -march=native"
 		)
 
 		string(CONCAT 
@@ -44,11 +44,11 @@ function(HandleBuildType target)
 			${GCC_CLANG_COMMON_OPTIONS}
 			" -O3 -ffast-math -fmerge-all-constants"
 			" -flto -fdata-sections -ffunction-sections -mtune=native"
-			" -funsafe-loop-optimizations"
 		)
 
 		if(${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
 			string(CONCAT GCC_CLANG_DEBUG_OPTIONS ${GCC_CLANG_DEBUG_OPTIONS} " -fsanitize=leak")
+			string(CONCAT GCC_CLANG_RELEASE_OPTIONS ${GCC_CLANG_RELEASE_OPTIONS} " -funsafe-loop-optimizations")
 		else(${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
 			string(CONCAT GCC_CLANG_DEBUG_OPTIONS ${GCC_CLANG_DEBUG_OPTIONS} " -fsanitize=dataflow -fsanitize=safe-stack")
 		endif(${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
@@ -63,10 +63,8 @@ function(HandleBuildType target)
 		target_link_libraries(${target} PUBLIC $<$<CONFIG:Debug>:"ubsan">)
 
 		target_compile_options(${target} PUBLIC $<$<CONFIG:Release>:${GCC_CLANG_RELEASE_OPTIONS}>)
-		set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,--gc-sections" PARENT_SCOPE)
 
 		target_compile_options(${target} PUBLIC $<$<CONFIG:MinSizeRel>:${GCC_CLANG_MINSIZEREL_OPTIONS}>)
-		set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "-s -Wl,--gc-sections" PARENT_SCOPE)
 
 		target_compile_options(${target} PUBLIC $<$<CONFIG:RelWithDebInfo>:${GCC_CLANG_RELWITHDEBINFO_OPTIONS}>)
 	elseif(${CMAKE_C_COMPILER_ID} STREQUAL "MSVC")

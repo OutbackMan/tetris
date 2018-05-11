@@ -7,7 +7,7 @@ typedef enum {
 } GAME_TEST_STATUS;
 
 #define GAME_TEST_ASSERT(expr) \
-	((!expr) ? (game_test_report_failure(__FILE__, __LINE__, #expr), FAILURE) : SUCCESS)
+	(!(expr) ? (game_test_report_failure(__FILE__, __LINE__, #expr), FAILURE) : SUCCESS)
 
 int game_test_report_failure(const char* file_name, const int line_number, const char* expr);
 
