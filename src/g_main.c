@@ -47,9 +47,12 @@ int main(int argc, char** argv)
 	};
 
 	game_args_parse(arg_table, ARG__NUM, argc, argv);
-
-	game_args_print_syntax(arg_table, ARG__NUM);
-	game_args_print_glossary(arg_table, ARG__NUM);
+	
+	if (arg_table[HELP_ARG].b_value == true) {
+		game_args_print_syntax(arg_table, ARG__NUM);
+		puts(GAME_DESCRIPTION);
+		game_args_print_glossary(arg_table, ARG__NUM);
+	}
 
 	return EXIT_SUCCESS;	
 }

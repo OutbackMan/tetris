@@ -29,11 +29,15 @@ enable_language(C)
 include(HandleVersion)
 HandleVersion()
 
-set(_game_sources
-	src/g_main.c
+set(_game_utils_sources
 	src/utils/g_log.c
 	src/utils/g_status.c
 	src/utils/g_args.c
+)
+
+set(_game_sources
+	src/g_main.c
+	${_game_utils_sources}
 )
 
 add_executable(game

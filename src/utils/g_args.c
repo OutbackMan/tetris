@@ -79,40 +79,45 @@ void game_args_parse(GAME_ArgsInstance* arg_table, const size_t arg_table_length
 	for (int arg_pos = 1; arg_pos < argc && argv[arg_pos][0] == ARG_START; ++arg_pos) {
 		char* arg_char = argv[arg_pos] + 1;
 		while (*arg_char != '\0') {
-			GAME_ArgsInstance arg_instance;
+			GAME_ArgsInstance* arg_instance = NULL;
+			bool is_valid_arg = false;
 			for (size_t arg_index = 0; arg_index < arg_table_length; ++arg_index) {
-				arg_instance = arg_table[arg_index];
+				arg_instance = arg_table + arg_index;
 
-				if (*arg_char == arg_instance.option_char) {
-					switch(arg_instance.type) {
+				if (*arg_char == arg_instance->option_char) {
+					is_valid_arg = true;
+					switch(arg_instance->type) {
 					case ARG_INT:
+						++arg_char;
+						arg_instance->i_value = 0;
 						while (isdigit(*arg_char)) {
-							arg_instance.i_value *= 10;
-							arg_instance.i_value += *arg_char - '0';
+							arg_instance->i_value *= 10;
+							arg_instance->i_value += *arg_char - '0';
 							++arg_char;
 						}	
 						break;
 					case ARG_BOOL:
-						arg_instance.b_value = !arg_instance.b_value;
+						arg_instance->b_value = !arg_instance->b_value;
 						++arg_char;	
 						break;
 					case ARG_FILE:
 					{
-						const char* str_arg_start = arg_char;
+						const char* str_arg_start = ++arg_char;
 
 						while (isalnum(*arg_char) || *arg_char == '_') {
 							++arg_char;
 						}	
 
-						strncpy(arg_instance.f_value, str_arg_start, (size_t)(str_arg_start - arg_char));
+						strncpy(arg_instance->f_value, str_arg_start, (size_t)(str_arg_start - arg_char));
 					} break;
 					}
-				} else {
-						fprintf(stderr, "Illegal option %c\n", *arg_char);
-						fprintf(stderr, "Try '%s %cH' for more information.\n", GAME_BINARY_STRING, ARG_START);
-						return;
 				}
 			}	
+			if (!is_valid_arg) {
+				fprintf(stderr, "Illegal option %c\n", *arg_char);
+				fprintf(stderr, "Try '%s %cH' for more information.\n", GAME_BINARY_STRING, ARG_START);
+				return;
+			}
 		}
 	}
 }
