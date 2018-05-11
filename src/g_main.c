@@ -54,5 +54,7 @@ int main(int argc, char** argv)
 		game_args_print_glossary(arg_table, ARG__NUM);
 	}
 
+	game_start(arg_table[WIDTH_ARG].i_value, arg_table[HEIGHT_ARG].i_value);
+
 	return EXIT_SUCCESS;	
 }
