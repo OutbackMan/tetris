@@ -10,7 +10,7 @@ static GAME_TEST_STATUS example_test_b(void)
 	return GAME_TEST_ASSERT(10 == 10);
 }
 
-GAME_TEST_STATUS tests_exampleTestSuite(const int argc, const char** argv)
+GAME_TEST_STATUS tests_exampleTestSuite(int argc, char** argv)
 {
 	if (game_tests_strcmp(argv[1], "example_test_a")) {
 		return example_test_a();

@@ -33,6 +33,7 @@ set(_game_sources
 	src/g_main.c
 	src/utils/g_log.c
 	src/utils/g_status.c
+	src/utils/g_args.c
 )
 
 add_executable(game

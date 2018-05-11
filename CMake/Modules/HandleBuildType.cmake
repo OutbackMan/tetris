@@ -16,7 +16,7 @@ function(HandleBuildType target)
 	if(${CMAKE_C_COMPILER_ID} MATCHES "GNU|Clang")
 		string(CONCAT
 			GCC_CLANG_COMMON_OPTIONS
-			"-Wall -Wextra -Wpedantic -std=c99 -Wformat -Wshadow -Wcast-qual" 
+			"-Wall -Wextra -Wpedantic -Wformat -Wshadow -Wcast-qual" 
 			" -Wmissing-prototypes -msse2 -msse3 -march=native"
 		)
 
