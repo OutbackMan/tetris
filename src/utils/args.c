@@ -1,12 +1,12 @@
-#include "utils/g_args.h"
+#include "utils/args.h"
 
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
 
-#include "g_common.h"
-#include "utils/g_assert.h"
-#include "utils/g_log.h"
+#include "common.h"
+#include "utils/assert.h"
+#include "utils/log.h"
 
 GAME_INTERNAL const char* game_args__get_arg_type_string(GAME_ARGS_TYPE arg_type);
 

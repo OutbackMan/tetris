@@ -1,45 +1,42 @@
 # CONTRIBUTING
 
-`'M4_LPROJECT_NAME_M4` welcomes new contributors. This document will guide you
-through the process.
+game welcomes new contributors. This document will guide you through the process.
 Please make sure you have read the [README.md](README.md) file before you proceed.
 
 ## FORK
 
-Fork the project [on GitHub](https://github.com/libuv/libuv) and check out
-your copy.
+Fork the project [on GitHub](https://github.com/libuv/libuv) and check out your copy:
 
 ``` bash
 $ # clone the repository:
 $ git clone https://github.com/username/libuv.git
-$ # move to `'M4_LPROJECT_NAME_M4`' directory:
-$ cd `'M4_LPROJECT_NAME_M4`'
-$ # add `'M4_LPROJECT_NAME_M4`' remote:
+$ # move to game directory:
+$ cd game
+$ # add game remote:
 $ git remote add upstream https://github.com/libuv/libuv.git
 ```
 
-`'M4_LPROJECT_NAME_M4`' uses the [gitflow](link) workflow. 
+game uses the [gitflow](link) workflow. 
 With this in mind, decide on the appropriate branch for your work to go into. 
 
-NOTE: Any patches that change `'M4_LPROJECT_NAME_M4`''s API will get rejected.
+NOTE: Any patches that change game's API will get rejected.
 
 In case of doubt, post your question on [gitter](link). 
 
 Especially do so if you plan to work on something big. Nothing is more
 frustrating than seeing your hard work go to waste because your vision
-does not align with that of a project maintainers.
+does not align with that of a project maintainer(s).
 
 ### BRANCH
 
 ```bash
 $ # create appropriate branch
-$ git checkout -b <my-branch-name> -t origin/<`'M4_LPROJECT_NAME_M4`'-branch-name>
+$ git checkout -b <my-branch-name> -t origin/<game-branch-name>
 ```
 
 ### CODE
 
-Use gnu indent as linter ???
-Please adhere to [`'M4_LPROJECT_NAME_M4`''s code style](CODE-STYLE.md). 
+Please adhere to [game's code style](CODE-STYLE.md). 
 
 ### COMMIT
 
@@ -88,14 +85,14 @@ Use `git rebase` (not `git merge`) to sync your work from time to time.
 
 ```
 $ git fetch upstream
-$ git rebase upstream/<`'M4_LPROJECT_NAME_M4`'-branch-name>
+$ git rebase upstream/<game-branch-name>
 ```
 
 ### TEST
 
-All significant changes should come with tests.  Add your tests in the
-`test/` directory. If you add a new test file, it needs to be registered in `Makefile.am` by adding the file's name to the `test_run_tests_SOURCES` list.
-
+All significant changes should come with tests. 
+game organises functionally related tests into pseudo test suites, which in game's case, is a fancy name for single .c files that run a series of functions that act as unit tests.
+If you add a new test suite, or add a unit test to an existing suite, it needs to be registered in `CMakeLists.txt` in the 'CTest' section.
 Look at other tests to see how they should be structured and to make sure that there are no test regressions.
 
 ### PUSH

@@ -30,13 +30,13 @@ include(HandleVersion)
 HandleVersion()
 
 set(_game_utils_sources
-	src/utils/g_log.c
-	src/utils/g_status.c
-	src/utils/g_args.c
+	src/utils/log.c
+	src/utils/status.c
+	src/utils/args.c
 )
 
 set(_game_sources
-	src/g_main.c
+	src/main.c
 	${_game_utils_sources}
 )
 
@@ -70,8 +70,8 @@ endif(WINDOWS)
 set(GAME_DESCRIPTION "Cross platform 2D SDL game.")
 
 configure_file(
-	${CMAKE_SOURCE_DIR}/include/g_common.h.in
-	${CMAKE_SOURCE_DIR}/include/g_common.h
+	${CMAKE_SOURCE_DIR}/include/common.h.in
+	${CMAKE_SOURCE_DIR}/include/common.h
 )
 
 ################################################################################
@@ -91,7 +91,7 @@ foreach(game_test_suite ${_game_test_suites})
 endforeach(game_test_suite)
 
 create_test_sourcelist(_game_sources game_test_driver.c ${_game_test_suite_sources})
-add_executable(game_test_driver ${_game_sources} tests/g_test-helpers.c)
+add_executable(game_test_driver ${_game_sources} tests/test-helpers.c)
 target_link_libraries(game_test_driver ${SDL2x64_LIBRARIES})
 
 foreach(game_test_suite ${_game_test_suites})

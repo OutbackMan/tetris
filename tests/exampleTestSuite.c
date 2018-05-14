@@ -1,4 +1,4 @@
-#include "g_test-helpers.h"
+#include "test-helpers.h"
 
 static GAME_TEST_STATUS example_test_a(void)
 {

@@ -1,11 +1,11 @@
-#include "utils/g_log.h"
+#include "utils/log.h"
 
 #include <time.h>
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "g_common.h"
-#include "utils/g_ansi-colours.h"
+#include "common.h"
+#include "utils/ansi-colours.h"
 
 GAME_INTERNAL struct {
 	bool in_release_mode;	

@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "g_common.h"
-#include "utils/g_log.h"
-#include "utils/g_assert.h"
-#include "utils/g_status.h"
-#include "utils/g_args.h"
+#include "common.h"
+#include "utils/log.h"
+#include "utils/assert.h"
+#include "utils/status.h"
+#include "utils/args.h"
 
 int main(int argc, char** argv)
 {
@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 		game_args_print_glossary(arg_table, ARG__NUM);
 	}
 
-	game_start(arg_table[WIDTH_ARG].i_value, arg_table[HEIGHT_ARG].i_value);
+	// game_start(arg_table[WIDTH_ARG].i_value, arg_table[HEIGHT_ARG].i_value);
 
 	return EXIT_SUCCESS;	
 }
