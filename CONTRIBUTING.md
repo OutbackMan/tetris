@@ -92,8 +92,8 @@ $ git rebase upstream/<game-branch-name>
 
 All significant changes should come with tests. 
 game organises functionally related tests into pseudo test suites, which in game's case, is a fancy name for single .c files that run a series of functions that act as unit tests.
-If you add a new test suite, or add a unit test to an existing suite, it needs to be registered in `CMakeLists.txt` in the 'CTest' section.
-Look at other tests to see how they should be structured and to make sure that there are no test regressions.
+If you add a new test suite, or add a unit test to an existing suite, it needs to be registered in `CMakeLists.txt` in the `CTest` section.
+Look at other tests to see how they should be named and structured and to make sure that there are no test regressions.
 
 ### PUSH
 

@@ -8,4 +8,6 @@ windows:
 1. Complete CTest project scaffold
 
 NOTE: Have sphinx docs model that of SDL2 docs, i.e. code examples
-Have github wiki pages include motivation, priorities and libuv description docs
+Have github wiki pages include motivation, priorities and libuv description docs (look a hysterix wiki)
+`sphinx-quickstart` (separate source and remove '_')
+add support for woboq codebrowser

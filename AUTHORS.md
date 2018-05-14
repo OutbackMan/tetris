@@ -9,11 +9,17 @@ game authors are ordered by first contribution:
 
 // signing verifies data has not changed (sha1sum is not enough as website could be hacked, and gives no info on user or date) 
 
-// sign data with my private key (gpg --list-secret-keys; gpg --sign file.txt). 
+// gpg --full-generate-key (gpg --list-keys)
+// to deactivate key from server must generate a revocation key gpg --output revoke.asc --gen-revoke <keyid>
+// gpg --armor --output pubkey.txt --export <keyid>
+// gpg --send-keys --keyserver https://pgp.mit.edu <keyid> 
+
+// sign data with my private key (gpg --list-secret-keys; gpg --sign file.txt)
 // then have to extract encapsulated data from generated .gpg file
 // instead, do (gpg --detach-sign file.txt)
 
 // anyone with my public key can verify it was me. gpg --import pubkey.asc
 // gpg --fingerprint 4FA123 (fingerprint is a series of bytes used to identify a longer public key)
 // (gpg --verify) (assumes related data in same directory)
+
 

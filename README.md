@@ -1,12 +1,21 @@
+[![Travis CI](https://img.shields.io/travis/OutbackMan/tetris.svg)](https://travis-ci.org/OutbackMan/tetris)
+[![Appveyor](https://img.shields.io/appveyor/ci/OutbackMan/tetris.svg)](https://ci.appveyor.com/project/OutbackMan/tetris)
+![Documentation](https://img.shields.io/readthedocs/OutbackMan/tetris.svg)
+![Downloads](https://img.shields.io/github/downloads/atom/atom/total.svg)
+![Release Version](https://img.shields.io/github/tag/expressjs/express.svg)
+![License](https://img.shields.io/github/license/mashape/apistatus.svg)
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/OutbackMan/tetris)
+add a language badge
+
 # game:
-![Screenshot previewing game](images/g_preview_screenshot.png "Preview of game")
+![Screenshot previewing game](images/g_preview_screenshot.png)
 
 ## Overview
 game is a 2D cross platform SDL program.
 
-## Feature Highlights
-	* Cross platform
-	* Flexible command line argument handling 
+It boasts:
+* Cross platform
+* Flexible command line argument handling 
 
 ## Versioning
 Following version 1.0.0, game follows the [semantic](https://semver.org/) versioning scheme.
@@ -40,8 +49,9 @@ Documentation can also be browsed online [here](http://docs.libuv.org).
 
 | Linux/Mac               | Windows |
 | :---------------------: | :-----: |
-| cmake (version >= 3.0.2) |
-| gcc (version >= 5.0) or clang (version >= 3.0) | visual studio (version >= 2013) | 
+| cmake (version >= 3.0.2) | cmake (version >= 3.0.2) |
+| gcc (version >= 5.0) or clang (version >= 4.0) | visual studio (edition >= 2013) | 
+| (if planning to write documentation) sphinx | sphinx |
 
 #### Libraries
 
