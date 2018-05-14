@@ -16,12 +16,12 @@ $ # add game remote:
 $ git remote add upstream https://github.com/libuv/libuv.git
 ```
 
-game uses the [gitflow](link) workflow. 
+game uses the [gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) workflow. 
 With this in mind, decide on the appropriate branch for your work to go into. 
 
 NOTE: Any patches that change game's API will get rejected.
 
-In case of doubt, post your question on [gitter](link). 
+In case of doubt, post your question on [gitter](https://www.gitter.im/tetris). 
 
 Especially do so if you plan to work on something big. Nothing is more
 frustrating than seeing your hard work go to waste because your vision
@@ -54,7 +54,7 @@ changed and why.  Follow these guidelines when writing one:
 
 1. The first line should be 50 characters or less and contain a short
    description of the change prefixed with the name of the changed
-   subsystem (e.g. "utils/misc: add want_config to `'M4_UPROJECT_NAME_M4`'_Args").
+   subsystem (e.g. "utils: add ansi colour terminal support for log).
 2. Keep the second line blank.
 3. Wrap all other lines at 72 columns.
 
@@ -103,8 +103,3 @@ $ git push origin <my-branch-name>
 
 Go to https://github.com/username/libuv and select your feature branch.  Click
 the 'Pull Request' button and fill out the form.
-
-Pull requests are usually reviewed within a few days.  If there are comments
-to address, apply your changes in a separate commit and push that to your
-feature branch.  Post a comment in the pull request afterwards; GitHub does
-not send out notifications when you add commits.

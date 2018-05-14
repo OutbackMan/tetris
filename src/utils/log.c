@@ -49,11 +49,11 @@ void game_log__log(
 
 	GAME_LOCAL_PERSIST const char* TIME_FORMAT_STR = "%H:%M:%S";
 	size_t time_string_length = strftime(
-					      time_string_buf,
-					      sizeof(time_string_buf), 
-					      TIME_FORMAT_STR, 
-					      local_time
-					     ); 
+									time_string_buf,
+									sizeof(time_string_buf), 
+									TIME_FORMAT_STR, 
+									local_time
+								); 
 	time_string_buf[time_string_length] = '\0';
 	
 	va_list args;

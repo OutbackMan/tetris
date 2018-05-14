@@ -51,13 +51,13 @@ License:
 		goto __leave; \
 	} while (0);
 
+#define GAME_FALLTHROUGH_INTENDED
 #define GAME_NO_DEFAULT_CASE
 
-#if GAME_BUILD_MODE_DEBUG
+#ifdef GAME_BUILD_MODE_DEBUG
 #ifdef _MSC_VER
 #include <intrin.h>
 #else
-// ~/.gdbinit --> break __debugbreak; step backwards
 static inline void __debugbreak(void) { exit(EXIT_FAILURE); }
 #endif
 #define GAME_BREAKPOINT() __debugbreak()
