@@ -12,4 +12,8 @@ Have github wiki pages include motivation, priorities and libuv description docs
 `sphinx-quickstart` (separate source and remove '_')
 add support for woboq codebrowser
 
-create issue with labels and that links to milestone
+create issue with labels and that links to milestone (create templates from github settings)
+previous_retrospective + roadmap
+previous_retrospective + sprint
+
+outbackman.github.io/tetris

@@ -1,16 +1,16 @@
-Welcome to `M4_LPROJECT_NAME_M4`''s documentation
+Welcome to game's documentation
 =================================================
 
 Overview
 --------
-'MR_LPROJECT_NAME_M4`' is a `'M4_PROJECT_DESCRIPTION`'.
+game is a 2D cross platform SDL game. 
 It features:
 * Cross platform
 * Flexible command line options
 
 .. note::
 	In case you find errors in this documentation you can help by sending
-	`pull requests <https://github.com/libuv/`'M4_LPROJECT_NAME_M4`'>`_!
+	`pull requests <https://github.com/OutbackMan/tetris>_!
 
 Documentation
 -------------
@@ -19,11 +19,8 @@ Documentation
 	:maxdepth: 1
 
 	tutorial
-	guide
 	api
 
-Obtaining
+Downloading
 ---------
-'`M4_LPROJECT_NAME_M4`' binaries can be downloaded `here <http://github.com/user/`'M4_LPROJECT_NAME_M4`'/releases>`_.
-
-To install from source, follow the instructions in the `README <https://github.com/libuv/`'M4_LPROJECT_NAME_M4`'/blob/master/README.md>`_.
+To obtain a copy of game, follow the instructions in the `README <https://github.com/libuv/game/blob/master/README.md>`_.

@@ -1,1 +1,9 @@
 theme: jekyll-theme-midnight
+
+url: "http://outbackman.github.io/tetris"
+
+title: Tetris
+description: example description
+
+author:
+  name: Ryan McClue
