@@ -17,3 +17,6 @@ previous_retrospective + roadmap
 previous_retrospective + sprint
 
 outbackman.github.io/tetris
+
+
+no need to base64 and url encode
