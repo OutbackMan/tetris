@@ -1,11 +1,11 @@
-[![Travis CI](https://img.shields.io/travis/OutbackMan/tetris.svg)](https://travis-ci.org/OutbackMan/tetris)
-[![Appveyor](https://img.shields.io/appveyor/ci/OutbackMan/tetris.svg)](https://ci.appveyor.com/project/OutbackMan/tetris)
-![Documentation](https://img.shields.io/readthedocs/OutbackMan/tetris.svg)
-![Downloads](https://img.shields.io/github/downloads/atom/atom/total.svg)
-![Release Version](https://img.shields.io/github/tag/expressjs/express.svg)
-![License](https://img.shields.io/github/license/mashape/apistatus.svg)
-[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/OutbackMan/tetris)
-add a language badge
+![Travis CI](https://img.shields.io/travis/OutbackMan/tetris.svg?style=flat-square&logo=travis)
+![Appveyor](https://img.shields.io/appveyor/ci/OutbackMan/tetris.svg?style=flat-square&logo=appveyor)
+![Documentation](https://img.shields.io/readthedocs/OutbackMan/tetris.svg?style=flat-square)
+![Downloads](https://img.shields.io/github/downloads/atom/atom/total.svg?style=flat-square)
+![Release Version](https://img.shields.io/github/tag/expressjs/express.svg?style=flat-square)
+![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)
+![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square&logo=gitter-white&link=http://left&link=http://right)
+![C](https://img.shields.io/badge/language-c-lightgrey.svg?style=flat-square)
 
 # game:
 ![Screenshot previewing game](images/g_preview_screenshot.png)
@@ -40,7 +40,7 @@ $ # e.g build documentation as HTML:
 $ make html
 ```
 
-Documentation can also be browsed online [here](http://docs.libuv.org).
+Documentation can also be browsed online [here](http://docs.libuv.org).]
 
 ## Downloading
 
