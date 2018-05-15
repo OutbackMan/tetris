@@ -1,13 +1,24 @@
 .. _api:
 
-API documentation
-=================
+game API By Category
+=====================
 
-.. list-table: utils
-	:widths: 50 50
-	:header-rows: 1
+Utils
+------
 
-	* - View information and functions relating to... 
-	 - :ref:`log`	
-	* - View the header
-	 - log.h
+============================================= ===============
+View information and functions relating to...  View the header
+============================================= ===============
+:ref:`logging`                                    `log.h <https://github.com/OutbackMan/tetris/blob/master/include/utils/log.h>`_ 
+log                                           example
+============================================= ===============
+
+Data Structures
+-------------------
+
+============================================= ===============
+View information and functions relating to...  View the header
+============================================= ===============
+:ref:`logging`                                    `log.h <https://github.com/OutbackMan/tetris/blob/master/include/utils/log.h>`_ 
+log                                           example
+============================================= ===============
