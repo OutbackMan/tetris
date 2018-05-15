@@ -18,9 +18,9 @@ Documentation
 .. toctree::
 	:maxdepth: 1
 
-	tutorial
-	api
+	tutorial/tutorial
+	api/api
 
 Downloading
 ---------
-To obtain a copy of game, follow the instructions in the `README <https://github.com/libuv/game/blob/master/README.md>`_.
+To obtain a copy of game, follow the instructions in the `README <https://github.com/OutbackMan/tetris/blob/master/README.md>`_.
