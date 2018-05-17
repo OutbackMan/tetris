@@ -8,7 +8,7 @@
 #include "utils/log.h"
 #include "utils/status.h"
 
-GAME_STATUS g_game_start(void)
+GAME_COLD GAME_STATUS g_game_start(void)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		GAME_LOG_FATAL(
@@ -48,21 +48,51 @@ GAME_STATUS g_game_start(void)
 		return FSDL2;
 	}
 
-	GAME_STATUS handle_events_status = DEFAULT;
+	const float DESIRED_FPS = 60.0f;
+	const float DESIRED_FRAME_TIME_MS = 1000.0f / DESIRED_FPS;
+	const unsigned MAX_UPDATE_STEPS = 6;
+	const float MAX_DELTA_TIME = 1.0f;
+
 	for (bool game_is_running = true; !game_is_running; ) {
-		handle_events_status = game_handle_events(window, renderer);
+		for (u32 prev_ticks = SDL_GetTicks(); !game_is_running; ) {
+			u32 cur_ticks = SDL_GetTicks() - prev_ticks;
+			prev_ticks = cur_ticks;
+			float total_delta_time = cur_ticks / DESIRED_FRAME_TIME_MS;
 
-		switch (handle_events_status) {
-		case EXIT:
-			game_is_running = false;
-		case FAILURE:
-			GAME_LOG_FATAL(
-				"Unable to handle game events. Status %s\n", 
-				game_status_str(handle_events_status)
-			);
+			GAME_STATUS handle_events_status = game_handle_events(
+													window, 
+													renderer
+												);
 
-			return FAILURE;
+			switch (handle_events_status) {
+			case EXIT:
+				game_is_running = false;
+			GAME_STATUS_FAILURE_MAP(GAME_STATUS_EXPAND_AS_CASE)
+				GAME_LOG_FATAL(
+					"Unable to handle game events. Status %s\n", 
+					game_status_str(handle_events_status)
+				);
+
+				game_exit();
+
+				return handle_events_status;
+			GAME_NO_DEFAULT_CASE
+			}
+
+			unsigned update_counter = 0;
+			while (total_delta_time > 0.0f && update_counter < MAX_UPDATE_STEPS) {
+				delta_time = GAME_MIN_FLOAT(total_delta_time, MAX_DELTA_TIME);
+				total_delta_time -= delta_time;
+				update(delta_time);
+
+				++update_counter;
+			}
+
+			render();
 		}
+
+		// update
+		// render
 	}
 
 	game_exit();
@@ -80,19 +110,18 @@ GAME_STATUS game_handle_events(
 
 	SDL_Event event = {0};
 	while (SDL_PollEvent(&event)) {
-		handle_event_status = game_handle_event(game, event.type);
+		handle_event_status = game_handle_event(event.type);
 
 		switch (handle_event_status) {
 		case EXIT:
 			return EXIT;	
-		case FAILURE:
-		case FSDL2:
+		GAME_STATUS_FAILURE_MAP(GAME_STATUS_EXPAND_AS_CASE)
 			GAME_LOG_FATAL(
 				"Unable to handle game event. Status %s\n", 
 				game_status_str(handle_event_status)
 			);
 
-			return FAILURE;
+			return handle_event_status;
 		}
 	}
 
@@ -106,7 +135,6 @@ GAME_STATUS game_handle_event(SDL_Event* event)
 		return EXIT;
 	} else if (event->type == SDL_WINDOWEVENT) {
 		GAME_STATUS handle_window_events_status = game_handle_window_events(
-														game, 
 														&event->window
 													);
 		if (handle_window_events_status !
@@ -118,43 +146,14 @@ GAME_STATUS game_handle_event(SDL_Event* event)
 }
 
 GAME_INTERNAL
-GAME_STATUS game_handle_window_events(Game* game, SDL_Event* event)
-{
-}
-
-GAME_INTERNAL
-GAME_STATUS game_handle_keyboard_events(Game* game, SDL_Event* event)
-{
-}
-
-GAME_INTERNAL GAME_STATUS handle_keyboard_events(Game* game, SDL_KeyboardEvent* keyboard_event)
-{
-	// check for ctrl-q also, etc.
-	switch (keyboard_event->keysym.sym) {
-		
-	}
-	if (event.key.keysym.sym == SDLK_ESCAPE) {
-		game->is_running = false;
-	} else {
-		game__system_input(game, event);
-	}
-	
-}
-
-GAME_INTERNAL GAME_STATUS handle_window_events(Game* game, SDL_WindowEvent* window_event)
+GAME_STATUS game_handle_window_events(SDL_WindowEvent* event)
 {
 	switch (window_event->event) {
 	case SDL_WINDOWEVENT_RESIZED:
-		if (game_texture_resize(game->texture, game->renderer, window_event.data1, window_event.data2) != SUCCESS) {
-			GAME_LOG_FATAL("Unable to resize game texture: %s\n", SDL_GetError());	
-			return SDL_FAILURE;
-		}
+		// ..
 		break;
 	case SDL_WINDOWEVENT_EXPOSED:
-		if (game_convert_field_to_texture() < 0) {
-			GAME_LOG_FATAL("Unable to update game texture: %s\n", SDL_GetError());	
-			return SDL_FAILURE;
-		}
+		// bool window_is_exposed = true
 		if (SDL_RenderClear(game_renderer) < 0) {
 			GAME_LOG_FATAL("Unable to clear game renderer: %s\n", SDL_GetError());	
 			return SDL_FAILURE;
@@ -165,6 +164,17 @@ GAME_INTERNAL GAME_STATUS handle_window_events(Game* game, SDL_WindowEvent* wind
 		} 
 		SDL_RenderPresent(game_renderer);
 		break;
+
+}
+
+GAME_INTERNAL
+GAME_STATUS game_handle_keyboard_events(SDL_KeyboardEvent* event)
+{
+	// check for ctrl-q also, etc.
+	switch (event->keysym.sym) {
+	case SDLK_ESCAPE:
+		return EXIT;
+	}
 }
 
 GAME_INTERNAL void game_quit(SDL_Window* window, SDL_Renderer* renderer)

@@ -33,6 +33,8 @@ set(_game_utils_sources
 	src/utils/log.c
 	src/utils/status.c
 	src/utils/args.c
+	src/utils/math.c
+	src/core/game.c
 )
 
 set(_game_sources
