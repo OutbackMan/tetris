@@ -15,6 +15,8 @@
 
 int main(int argc, char** argv)
 {
+	// encapsulate in GAME_INTERNAL game_args_parse()
+	// perhaps utilise static struct with extern technique in own file
 	enum { HELP_ARG, VERSION_ARG, SAVE_FILE_ARG, WIDTH_ARG, HEIGHT_ARG, ARG__NUM };
 
 	GAME_ArgsInstance arg_table[ARG__NUM] = {
@@ -58,7 +60,12 @@ int main(int argc, char** argv)
 		game_args_print_glossary(arg_table, ARG__NUM);
 	}
 
-	// game_start(arg_table[WIDTH_ARG].i_value, arg_table[HEIGHT_ARG].i_value);
+	GAME_STATUS game_run_status = g_game_run();
 
-	return EXIT_SUCCESS;	
+	GAME_LOG_INFO(
+		"Game exited with status: %s", 
+		game_str_status(game_run_status)
+	);
+
+	return game_run_status;	
 }

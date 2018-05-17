@@ -3,6 +3,6 @@
 
 #include "common.h"
 
-GAME_COLD GAME_STATUS g_game_start(void);
+GAME_COLD GAME_STATUS g_game_run(void);
 
 #endif

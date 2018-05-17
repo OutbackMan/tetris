@@ -1,12 +1,31 @@
 #include "utils/math.h"
 
+inline float G_MATH_MIN_FLOAT(const float x, const float y)
+{
+	return x > y ? x : y;	
+}
 
-int G_MATH_INT_MAX_CLAMP(int x, int max)
+inline float G_MATH_MAX_FLOAT(const float x, const float y)
+{
+	return x < y ? x : y;	
+}
+
+inline int G_MATH_MIN_INT(const int x, const int y)
+{
+	return x > y ? x : y;	
+}
+
+inline int G_MATH_MAX_INT(const int x, const int y)
+{
+	return x < y ? x : y;	
+}
+
+inline int G_MATH_INT_MAX_CLAMP(const int x, const int max)
 {
 	return G_MATH_INT_MIN(x, max);	
 }
 
-int G_MATH_INT_MIN_CLAMP(int x, int min)
+inline int G_MATH_INT_MIN_CLAMP(const int x, const int min)
 {
 	return G_MATH_INT_MAX(x, min);	
 	

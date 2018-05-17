@@ -8,7 +8,30 @@
 #include "utils/log.h"
 #include "utils/status.h"
 
-GAME_COLD GAME_STATUS g_game_start(void)
+GAME_COLD GAME_STATUS g_game_run(void)
+{
+	SDL_Window window;
+	SDL_Renderer renderer;
+
+	GAME_STATUS init_status = game_init(&window, &renderer);
+
+	switch (init_status) {
+	GAME_STATUS_FAILURE_MAP(GAME_STATUS_EXPAND_AS_CASE)
+		GAME_LOG_FATAL(
+			"Unable to initialise game. Status %s\n", 
+			game_status_str(init_status);
+		);
+
+		return init_status;
+	default:
+		break;
+	}
+
+	return game_loop();
+}
+
+GAME_COLD 
+GAME_INTERNAL GAME_STATUS game_init(SDL_Window* window, SDL_Renderer* renderer)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		GAME_LOG_FATAL(
@@ -22,7 +45,7 @@ GAME_COLD GAME_STATUS g_game_start(void)
 	const char* window_title = GAME_UNAME" ["GAME_COMPILER" - x86/64]("\
 								GAME_BUILD_MODE")";
 
-	game->window = SDL_CreateWindow(
+	window = SDL_CreateWindow(
 						window_title, 
 						SDL_WINDOWPOS_UNDEFINED, 
 						SDL_WINDOWPOS_UNDEFINED,
@@ -31,23 +54,30 @@ GAME_COLD GAME_STATUS g_game_start(void)
 						SDL_WINDOW_RESIZABLE
 					);
 	
-	if (game->window == NULL) {
+	if (window == NULL) {
 		GAME_LOG_FATAL("Unable to create game window: %s\n", SDL_GetError());	
 		return FSDL2;
 	}
 
 	const int DEFAULT_RENDERING_DRIVER = -1;
-	game->renderer = SDL_CreateRenderer(
+	renderer = SDL_CreateRenderer(
 							game_window, 
 							DEFAULT_RENDERING_DRIVER, 
 							GAME_SDL_NO_FLAGS
 						);
 
-	if (game->renderer == NULL) {
+	if (renderer == NULL) {
 		GAME_LOG_FATAL("Unable to create game renderer: %s\n", SDL_GetError());	
 		return FSDL2;
 	}
 
+	return SUCCESS;
+}
+
+
+GAME_COLD 
+GAME_INTERNAL GAME_STATUS game_loop(void)
+{
 	const float DESIRED_FPS = 60.0f;
 	const float DESIRED_FRAME_TIME_MS = 1000.0f / DESIRED_FPS;
 	const unsigned MAX_UPDATE_STEPS = 6;
@@ -81,7 +111,7 @@ GAME_COLD GAME_STATUS g_game_start(void)
 
 			unsigned update_counter = 0;
 			while (total_delta_time > 0.0f && update_counter < MAX_UPDATE_STEPS) {
-				delta_time = GAME_MIN_FLOAT(total_delta_time, MAX_DELTA_TIME);
+				delta_time = G_MATH_FLOAT_MIN(total_delta_time, MAX_DELTA_TIME);
 				total_delta_time -= delta_time;
 				update(delta_time);
 
@@ -90,9 +120,6 @@ GAME_COLD GAME_STATUS g_game_start(void)
 
 			render();
 		}
-
-		// update
-		// render
 	}
 
 	game_exit();
@@ -153,28 +180,31 @@ GAME_STATUS game_handle_window_events(SDL_WindowEvent* event)
 		// ..
 		break;
 	case SDL_WINDOWEVENT_EXPOSED:
-		// bool window_is_exposed = true
-		if (SDL_RenderClear(game_renderer) < 0) {
-			GAME_LOG_FATAL("Unable to clear game renderer: %s\n", SDL_GetError());	
-			return SDL_FAILURE;
-		}
-		if (SDL_RenderCopy(game_renderer, game_texture, NULL, NULL) < 0) {
-			GAME_LOG_FATAL("Unable to copy to game renderer: %s\n", SDL_GetError());	
-			return SDL_FAILURE;
-		} 
-		SDL_RenderPresent(game_renderer);
+		game_render();
 		break;
 
 }
 
-GAME_INTERNAL
-GAME_STATUS game_handle_keyboard_events(SDL_KeyboardEvent* event)
+GAME_INTERNAL GAME_STATUS game_handle_keyboard_events(SDL_KeyboardEvent* event)
 {
 	// check for ctrl-q also, etc.
 	switch (event->keysym.sym) {
 	case SDLK_ESCAPE:
 		return EXIT;
 	}
+}
+
+GAME_HOT
+GAME_INTERNAL GAME_STATUS game_render(renderer)
+{
+	if (SDL_RenderClear(renderer) < 0) {
+		GAME_LOG_FATAL("Unable to clear game renderer: %s\n", SDL_GetError());	
+		return FSDL2;
+	}
+
+	SDL_RenderPresent(renderer);
+
+	return SUCCESS;
 }
 
 GAME_INTERNAL void game_quit(SDL_Window* window, SDL_Renderer* renderer)
