@@ -81,6 +81,21 @@ GAME_INTERNAL GAME_STATUS game_loop(void)
 {
 	obj object_under_control;
 	obj camera_tracking_object = object_under_control->px - screen_width / 2;
+	bool energising = false;
+	float energy_level = 0.0f;
+	float camera_x = 0.0f; // actual coordinates lag behind target
+	float camera_target_x = 0.0f;
+	bool player_has_control = false;
+	int player_turn_time;
+	
+	// human --> SDLK_Z 	
+	// player --> ai_controlling & ai_want_jump 
+	bool ai_want_jump;
+
+	enum GAME_STATE {
+		GS_STATE_1,
+		GS_STATE_2
+	} current_state, next_state;
 
 	const float DESIRED_FPS = 60.0f;
 	const float DESIRED_FRAME_TIME_MS = 1000.0f / DESIRED_FPS;
@@ -92,6 +107,20 @@ GAME_INTERNAL GAME_STATUS game_loop(void)
 			u32 cur_ticks = SDL_GetTicks() - prev_ticks;
 			prev_ticks = cur_ticks;
 			float total_delta_time = cur_ticks / DESIRED_FRAME_TIME_MS;
+
+			// FSM control supervisor
+			switch (current_state) {
+			case GS_STATE_1:		
+				some_action();
+				next_state = GS_STATE_2;
+			}
+
+			if (computer_is_controlling) {
+				STRATEGY_TYPE strategy = rand() % NUM_STRATEGIES;		
+				if (strategy == DEFENSIVE) {
+					
+				}
+			}
 
 			GAME_STATUS handle_events_status = game_handle_events(
 													window, 
@@ -123,8 +152,10 @@ GAME_INTERNAL GAME_STATUS game_loop(void)
 			}
 
 			render();
+
 		}
 	}
+
 
 	game_exit();
 
@@ -186,6 +217,10 @@ GAME_INTERNAL void game_update(float delta_time)
 			if (on_dead_response == EXPLODE) {
 				boom(x, y);		
 			}
+		}
+
+		if (fire_weapon) {
+			
 		}
 	}
 }
@@ -305,7 +340,19 @@ GAME_INTERNAL GAME_STATUS game_handle_keyboard_events(SDL_KeyboardEvent* event)
 		}
 	case SDLK_A_IS_HELD:
 	object_under_control->shoot_angle -= 1.0f * delta_time;
-
+	case SDLK_SPACE:
+	energising = true;
+	energy_level = 0.0f;
+	case SDLK_SPACE_IS_HELD:
+	if (energising) {
+		energy_level += 0.75f * delta_time;
+		if (energy_level >= 1.0f) {
+			energy_level = 1.0f;		
+		}
+	}
+	case SDLK_SPACE_IS_RELEASED:
+	fire_weapon = true;
+	energising = false;
 
 	}
 }

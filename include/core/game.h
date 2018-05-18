@@ -6,6 +6,29 @@
 GAME_COLD
 GAME_STATUS g_game_execute(void);
 
+typedef struct {
+	SDL_Window* window;
+	SDL_Renderer* renderer;
+
+
+	bool is_running;
+} G_Instance;
+
+// ai
+// determine angle formed from parabolic trajectory relating to range and elevation
+
+typedef struct {
+	Renderable* members;	
+} GroupRenderable;
+/*
+	bool is_team_dead = false;
+	for (team_member) {
+		is_team_dead |= team_member->is_alive;	
+	}
+	return is_team_dead;
+*/
+
+
 // renderable
 typedef struct {
 	SDL_Texture* texture; // sprite
