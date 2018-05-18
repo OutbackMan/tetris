@@ -60,7 +60,7 @@ int main(int argc, char** argv)
 		game_args_print_glossary(arg_table, ARG__NUM);
 	}
 
-	GAME_STATUS game_run_status = g_game_run();
+	GAME_STATUS game_run_status = g_game_execute();
 
 	GAME_LOG_INFO(
 		"Game exited with status: %s", 

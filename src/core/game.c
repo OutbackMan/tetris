@@ -8,7 +8,8 @@
 #include "utils/log.h"
 #include "utils/status.h"
 
-GAME_COLD GAME_STATUS g_game_run(void)
+GAME_COLD
+GAME_STATUS g_game_execute(void)
 {
 	SDL_Window window;
 	SDL_Renderer renderer;
@@ -113,7 +114,7 @@ GAME_INTERNAL GAME_STATUS game_loop(void)
 			while (total_delta_time > 0.0f && update_counter < MAX_UPDATE_STEPS) {
 				delta_time = G_MATH_FLOAT_MIN(total_delta_time, MAX_DELTA_TIME);
 				total_delta_time -= delta_time;
-				update(delta_time);
+				game_update(delta_time);
 
 				++update_counter;
 			}
@@ -125,6 +126,38 @@ GAME_INTERNAL GAME_STATUS game_loop(void)
 	game_exit();
 
 	return SUCCESS;
+}
+
+GAME_HOT
+GAME_INTERNAL void game_update(float delta_time)
+{
+		
+}
+
+GAME_INTERNAL void game_render(SDL_Renderer* renderer)
+{
+	for (int map_x = 0; map_x < map_width; ++map_x) {
+		for (int map_y = 0; map_y < map_height; ++map_y) {
+			switch(map[(map_y + (int)camera_y) * map_width + (map_x + (int)camera_x)]) {
+			case LAND:
+				SDL_Colour colour = GREEN;
+				SDL_SetRenderDrawColour(renderer, colour->r, ...);	
+			case SKY:
+				SDL_Colour colour = GREEN;
+				SDL_SetRenderDrawColour(renderer, colour->r, ...);	
+			}
+			SDL_Rect render_block = {
+				// ...	
+			}
+			SDL_FillRectDraw(renderer, render_block);
+		}
+	}
+
+	for (objects_that_are_renderable) {
+		obj_draw(camera_x, camera_y);
+	}
+
+	SDL_RenderPresent(renderer);
 }
 
 GAME_INTERNAL 
@@ -191,22 +224,29 @@ GAME_INTERNAL GAME_STATUS game_handle_keyboard_events(SDL_KeyboardEvent* event)
 	switch (event->keysym.sym) {
 	case SDLK_ESCAPE:
 		return EXIT;
+	case SDLK_W:
+		create_map(map, map_width, map_height);
 	}
 }
 
-GAME_HOT
-GAME_INTERNAL GAME_STATUS game_render(renderer)
+GAME_INTERNAL GAME_STATUS game_handle_mouse_button_events(SDL_MouseButtonEvent* mouse_motion_event)
 {
-	if (SDL_RenderClear(renderer) < 0) {
-		GAME_LOG_FATAL("Unable to clear game renderer: %s\n", SDL_GetError());	
-		return FSDL2;
-	}
-
-	SDL_RenderPresent(renderer);
-
-	return SUCCESS;
+	if (event->button == SDL_BUTTON_MIDDLE) {
+		add_drawable_physics_object(mouse_x + camera_x, mouse_y + camera_y);		
+	}	
 }
 
+GAME_INTERNAL GAME_STATUS game_handle_mouse_motion_events(SDL_MouseMotionEvent* mouse_motion_event)
+{
+	float map_scroll_speed = 400.0f;
+	if (event->x < 5) camera_pos_x -= map_scroll_speed * delta_time;
+	if (event->x > window_width - 5) camera_pos_x += map_scroll_speed * delta_time;
+	if (event->y < 5) camera_pos_y += map_scroll_speed * delta_time;
+	if (event->y > window_height - 5) camera_pos_y += map_scroll_speed * delta_time;
+	// must also clamp to map boundaries
+}
+
+GAME_COLD
 GAME_INTERNAL void game_quit(SDL_Window* window, SDL_Renderer* renderer)
 {
 	if (renderer != NULL) SDL_DestroyRenderer(renderer);
