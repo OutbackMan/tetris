@@ -79,6 +79,9 @@ GAME_INTERNAL GAME_STATUS game_init(SDL_Window* window, SDL_Renderer* renderer)
 GAME_COLD 
 GAME_INTERNAL GAME_STATUS game_loop(void)
 {
+	obj object_under_control;
+	obj camera_tracking_object = object_under_control->px - screen_width / 2;
+
 	const float DESIRED_FPS = 60.0f;
 	const float DESIRED_FRAME_TIME_MS = 1000.0f / DESIRED_FPS;
 	const unsigned MAX_UPDATE_STEPS = 6;
@@ -184,7 +187,6 @@ GAME_INTERNAL void game_update(float delta_time)
 				boom(x, y);		
 			}
 		}
-
 	}
 }
 
@@ -209,6 +211,9 @@ GAME_INTERNAL void game_render(SDL_Renderer* renderer)
 
 	for (objects_that_are_renderable) {
 		obj_draw(camera_x, camera_y);
+		if (obj == object_under_control) {
+			draw_block(x, y, COLOUR);		
+		}
 	}
 
 	SDL_RenderPresent(renderer);
@@ -280,6 +285,28 @@ GAME_INTERNAL GAME_STATUS game_handle_keyboard_events(SDL_KeyboardEvent* event)
 		return EXIT;
 	case SDLK_W:
 		create_map(map, map_width, map_height);
+	case SDLK_X:
+	// jump
+		if (object_under_control != NULL) {
+			if (object_under_control->is_stable) {
+				object_under_control->vx = +4.0f;		
+				object_under_control->vy = -8.0f;		
+				object_under_control->is_stable = false;		
+			}	
+		}
+	case SDLK_Z:
+	// jump
+		if (object_under_control != NULL) {
+			if (object_under_control->is_stable) {
+				object_under_control->vx = -4.0f;		
+				object_under_control->vy = -8.0f;		
+				object_under_control->is_stable = false;		
+			}	
+		}
+	case SDLK_A_IS_HELD:
+	object_under_control->shoot_angle -= 1.0f * delta_time;
+
+
 	}
 }
 
