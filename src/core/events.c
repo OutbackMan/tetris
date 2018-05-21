@@ -7,10 +7,7 @@ GAME_STATUS game_handle_events(G_Game* game)
 	while (SDL_PollEvent(&event)) {
 		handle_event_status = game_handle_event(event.type);
 
-		switch (handle_event_status) {
-		case EXIT:
-			return EXIT;	
-		GAME_STATUS_FAILURE_MAP(GAME_STATUS_EXPAND_AS_CASE)
+		if (handle_event_status != SUCCESS) {
 			GAME_LOG_FATAL(
 				"Unable to handle game event. Status %s\n", 
 				game_status_str(handle_event_status)
@@ -33,7 +30,14 @@ GAME_INTERNAL GAME_STATUS game_handle_event(SDL_Event* event)
 		GAME_STATUS handle_window_events_status = game_handle_window_events(
 														&event->window
 													);
-		if (handle_window_events_status !
+		if (handle_window_events_status != SUCCESS) {
+			GAME_LOG_FATAL(
+				"Unable to handle game event. Status %s\n", 
+				game_status_str(handle_event_status)
+			);
+
+			return handle_event_status;
+		}
 	} else if (event->type == SDL_KEYDOWN) {
 		game_handle_keyboard_events(game, &event->key);
 	} else {
@@ -54,16 +58,48 @@ GAME_STATUS game_handle_window_events(SDL_WindowEvent* event)
 
 }
 
-GAME_INTERNAL GAME_STATUS game_handle_keyboard_events(SDL_KeyboardEvent* event)
+bool keyonce(keycode, keystate)
 {
-	// check for ctrl-q also, etc.
-	switch (event->keysym.sym) {
-	case SDLK_ESCAPE:
-		game->want_to_run = false;
-		break;
-	case SDLK_W:
-		create_map(game->map->field, game->map->width, game->map->height);
-		break;
+	static bool old = false;
+	bool res = keystate[keycode] && !old;
+	old = keystate[keycode];
+	return res;
+}
+        Uint8 *keystate = SDL_GetKeyState(NULL);
+
+#define KEYONCE(scancode, keystate) \
+
+
+
+        #define keyonce(n) \
+            [&keystate]() -> bool { \
+                static bool old=false; \
+                bool res = keystate[n] && !old; \
+                old = keystate[n]; \
+                return res; }()
+
+        // Put new keys into the device's keyboard buffer.
+        static unsigned keyptr = 0;
+        if(keyonce(SDLK_UP))
+
+
+const uint8_t* keystate = SDL_GetKeyboardState(NULL);
+GAME_INTERNAL GAME_STATUS game_handle_keyboard_events(G_Game* game, const uint8_t* keystate)
+{
+	if (keystate[SDL_SCANCODE_ESCAPE] || keystate[SDL_SCANCODE_LCTRL] && keystate[SDL_SCANCODE_Q]) {
+		game->want_to_run = false	
+	} else if (keystate[SDL_SCANCODE_W]) {
+		// key_w_sentinel
+		static bool right_key_down = false;	
+		bool current = keystate[SDL_SCANCODE_RIGHT] && !right_key_down;
+		right_key_down = keystate[n];
+		if (current) {
+			// key once
+			create_map(game->map->field, game->map->width, game->map->height);
+		}
+		// is held if pressed previously but not now
+
+	}
 	case SDLK_X:
 	// jump
 		entity_manager->physics[entity_under_control].is_stable;
@@ -100,6 +136,7 @@ GAME_INTERNAL GAME_STATUS game_handle_keyboard_events(SDL_KeyboardEvent* event)
 	}
 }
 
+uint32_t* SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)
 GAME_INTERNAL GAME_STATUS game_handle_mouse_button_events(SDL_MouseButtonEvent* mouse_motion_event)
 {
 	if (event->button == SDL_BUTTON_MIDDLE) {

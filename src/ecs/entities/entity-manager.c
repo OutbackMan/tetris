@@ -4,6 +4,7 @@
 #include "lib/bit-array.h"
 
 #include "ecs/components/physics.h"
+#include "ecs/components/render.h"
 
 // behind the scenes use stretchy buffers
 typedef struct {
