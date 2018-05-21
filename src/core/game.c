@@ -8,13 +8,12 @@
 #include "utils/log.h"
 #include "utils/status.h"
 
-GAME_COLD
+GAME_COLD GAME_CHECK
 GAME_STATUS g_game_execute(void)
 {
-	SDL_Window window;
-	SDL_Renderer renderer;
+	G_Game game = {0};
 
-	GAME_STATUS init_status = game_init(&window, &renderer);
+	GAME_STATUS init_status = game_init(&game);
 
 	switch (init_status) {
 	GAME_STATUS_FAILURE_MAP(GAME_STATUS_EXPAND_AS_CASE)
@@ -31,9 +30,11 @@ GAME_STATUS g_game_execute(void)
 	return game_loop();
 }
 
-GAME_COLD 
-GAME_INTERNAL GAME_STATUS game_init(SDL_Window* window, SDL_Renderer* renderer)
+GAME_COLD GAME_CHECK
+GAME_INTERNAL GAME_STATUS game_init(G_Game* game, args)
 {
+	GAME_ASSERT(game != NULL, "%s", "msg");
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		GAME_LOG_FATAL(
 			"Unable to initialise game SDL backend: %s\n", 
@@ -46,16 +47,16 @@ GAME_INTERNAL GAME_STATUS game_init(SDL_Window* window, SDL_Renderer* renderer)
 	const char* window_title = GAME_UNAME" ["GAME_COMPILER" - x86/64]("\
 								GAME_BUILD_MODE")";
 
-	window = SDL_CreateWindow(
+	game->window = SDL_CreateWindow(
 						window_title, 
 						SDL_WINDOWPOS_UNDEFINED, 
 						SDL_WINDOWPOS_UNDEFINED,
-						arg_table->width->value, 
-						arg_table->height->value, 
+						args->window_width, 
+						args->window_height, 
 						SDL_WINDOW_RESIZABLE
 					);
 	
-	if (window == NULL) {
+	if (game->window == NULL) {
 		GAME_LOG_FATAL("Unable to create game window: %s\n", SDL_GetError());	
 		return FSDL2;
 	}
@@ -71,6 +72,8 @@ GAME_INTERNAL GAME_STATUS game_init(SDL_Window* window, SDL_Renderer* renderer)
 		GAME_LOG_FATAL("Unable to create game renderer: %s\n", SDL_GetError());	
 		return FSDL2;
 	}
+
+	// other default values
 
 	return SUCCESS;
 }
@@ -156,7 +159,6 @@ GAME_INTERNAL GAME_STATUS game_loop(void)
 		}
 	}
 
-
 	game_exit();
 
 	return SUCCESS;
@@ -165,6 +167,7 @@ GAME_INTERNAL GAME_STATUS game_loop(void)
 GAME_HOT
 GAME_INTERNAL void game_update(float delta_time)
 {
+	physics_system(entity_manager);
 	for (all_physics_objects) {
 		obj->ay += 2.0f; // gravity		
 
@@ -244,7 +247,10 @@ GAME_INTERNAL void game_render(SDL_Renderer* renderer)
 		}
 	}
 
-	for (objects_that_are_renderable) {
+	for (size_t entity_index = 0; entity_index < MAX_ENTITIES; ++entity_index) {
+		if (entity_manager->mask[entity_index] == COMPONENT_RENDERABLE) {
+			draw_system();	
+		}	
 		obj_draw(camera_x, camera_y);
 		if (obj == object_under_control) {
 			draw_block(x, y, COLOUR);		
@@ -254,130 +260,6 @@ GAME_INTERNAL void game_render(SDL_Renderer* renderer)
 	SDL_RenderPresent(renderer);
 }
 
-GAME_INTERNAL 
-GAME_STATUS game_handle_events(
-				SDL_Window* window, 
-				SDL_Renderer* renderer
-)
-{
-	GAME_STATUS handle_event_status = DEFAULT;
-
-	SDL_Event event = {0};
-	while (SDL_PollEvent(&event)) {
-		handle_event_status = game_handle_event(event.type);
-
-		switch (handle_event_status) {
-		case EXIT:
-			return EXIT;	
-		GAME_STATUS_FAILURE_MAP(GAME_STATUS_EXPAND_AS_CASE)
-			GAME_LOG_FATAL(
-				"Unable to handle game event. Status %s\n", 
-				game_status_str(handle_event_status)
-			);
-
-			return handle_event_status;
-		}
-	}
-
-	return SUCCESS;
-}
-
-GAME_INTERNAL
-GAME_STATUS game_handle_event(SDL_Event* event)
-{
-	if (event->type == SDL_QUIT) {
-		return EXIT;
-	} else if (event->type == SDL_WINDOWEVENT) {
-		GAME_STATUS handle_window_events_status = game_handle_window_events(
-														&event->window
-													);
-		if (handle_window_events_status !
-	} else if (event->type == SDL_KEYDOWN) {
-		game_handle_keyboard_events(game, &event->key);
-	} else {
-		return SUCCESS;		
-	}
-}
-
-GAME_INTERNAL
-GAME_STATUS game_handle_window_events(SDL_WindowEvent* event)
-{
-	switch (window_event->event) {
-	case SDL_WINDOWEVENT_RESIZED:
-		// ..
-		break;
-	case SDL_WINDOWEVENT_EXPOSED:
-		game_render();
-		break;
-
-}
-
-GAME_INTERNAL GAME_STATUS game_handle_keyboard_events(SDL_KeyboardEvent* event)
-{
-	// check for ctrl-q also, etc.
-	switch (event->keysym.sym) {
-	case SDLK_ESCAPE:
-		return EXIT;
-	case SDLK_W:
-		create_map(map, map_width, map_height);
-	case SDLK_X:
-	// jump
-		if (object_under_control != NULL) {
-			if (object_under_control->is_stable) {
-				object_under_control->vx = +4.0f;		
-				object_under_control->vy = -8.0f;		
-				object_under_control->is_stable = false;		
-			}	
-		}
-	case SDLK_Z:
-	// jump
-		if (object_under_control != NULL) {
-			if (object_under_control->is_stable) {
-				object_under_control->vx = -4.0f;		
-				object_under_control->vy = -8.0f;		
-				object_under_control->is_stable = false;		
-			}	
-		}
-	case SDLK_A_IS_HELD:
-	object_under_control->shoot_angle -= 1.0f * delta_time;
-	case SDLK_SPACE:
-	energising = true;
-	energy_level = 0.0f;
-	case SDLK_SPACE_IS_HELD:
-	if (energising) {
-		energy_level += 0.75f * delta_time;
-		if (energy_level >= 1.0f) {
-			energy_level = 1.0f;		
-		}
-	}
-	case SDLK_SPACE_IS_RELEASED:
-	fire_weapon = true;
-	energising = false;
-
-	}
-}
-
-GAME_INTERNAL GAME_STATUS game_handle_mouse_button_events(SDL_MouseButtonEvent* mouse_motion_event)
-{
-	if (event->button == SDL_BUTTON_MIDDLE) {
-		add_drawable_physics_object(mouse_x + camera_x, mouse_y + camera_y);		
-	}
-
-	if (event->button == SDL_BUTTON_LEFT) {
-		add_20_debris_objects(mouse_x + camera_x, mouse_y + camera_y);
-		// append to list of game objects
-	}
-}
-
-GAME_INTERNAL GAME_STATUS game_handle_mouse_motion_events(SDL_MouseMotionEvent* mouse_motion_event)
-{
-	float map_scroll_speed = 400.0f;
-	if (event->x < 5) camera_pos_x -= map_scroll_speed * delta_time;
-	if (event->x > window_width - 5) camera_pos_x += map_scroll_speed * delta_time;
-	if (event->y < 5) camera_pos_y += map_scroll_speed * delta_time;
-	if (event->y > window_height - 5) camera_pos_y += map_scroll_speed * delta_time;
-	// must also clamp to map boundaries
-}
 
 GAME_COLD
 GAME_INTERNAL void game_quit(SDL_Window* window, SDL_Renderer* renderer)

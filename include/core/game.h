@@ -7,12 +7,27 @@ GAME_COLD
 GAME_STATUS g_game_execute(void);
 
 typedef struct {
+	bool want_to_run;	
 	SDL_Window* window;
 	SDL_Renderer* renderer;
+	G_Camera* camera;
+	G_GamePlayer* players;
+	G_EntityManager* entity_manager;
+	G_Map* map;
+} G_Game;
 
+typedef struct {
+	size_t width;	
+	size_t height;	
+	G_MAP_TYPE* map;
+} G_Map;
 
-	bool is_running;
-} G_Instance;
+typedef struct {
+	bool is_energising;
+	float energy_level;
+	bool has_control;
+	bool is_computer_controlled;		
+} G_GamePlayer;
 
 // ai
 // determine angle formed from parabolic trajectory relating to range and elevation
