@@ -38,6 +38,8 @@ License:
  * COMMON MACROS
  *****************************************************************************/
 
+// include something regarding performance monitoring
+
 #define GAME_TO_STRING(val)	#val
 #define GAME_STRINGIFY(str)	GAME_TO_STRING(str)
 

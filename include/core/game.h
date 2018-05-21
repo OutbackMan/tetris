@@ -17,16 +17,24 @@ typedef struct {
 } G_Game;
 
 typedef struct {
+	int x;
+	int y;
+	int target_x;
+	int target_y;
+	int tracking_entity_index;
+} G_Camera;
+
+typedef struct {
 	size_t width;	
 	size_t height;	
 	G_MAP_TYPE* map;
 } G_Map;
 
 typedef struct {
-	bool is_energising;
-	float energy_level;
 	bool has_control;
 	bool is_computer_controlled;		
+	bool is_energising;
+	float energy_level;
 } G_GamePlayer;
 
 // ai

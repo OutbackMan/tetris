@@ -4,6 +4,8 @@
 
 #include <stdbool.h>
 
+#include "lib/argtable3/argtable.h"
+
 #include "common.h"
 #include "utils/log.h"
 #include "utils/status.h"
@@ -62,22 +64,48 @@ GAME_INTERNAL GAME_STATUS game_init(G_Game* game, args)
 	}
 
 	const int DEFAULT_RENDERING_DRIVER = -1;
-	renderer = SDL_CreateRenderer(
-							game_window, 
+	game->renderer = SDL_CreateRenderer(
+							game->window, 
 							DEFAULT_RENDERING_DRIVER, 
 							GAME_SDL_NO_FLAGS
 						);
 
-	if (renderer == NULL) {
+	if (game->renderer == NULL) {
 		GAME_LOG_FATAL("Unable to create game renderer: %s\n", SDL_GetError());	
 		return FSDL2;
 	}
 
+		
 	// other default values
+	// have the create_() function allocate and free memory directly to allow these types of calls
+	GAME_STATUS camera_create_status = game_camera_create(game->camera);
+	if (camera_create_status != SUCCESS) {
+		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
+		return FAILURE;
+	}
+
+	GAME_STATUS player_create_status = game_player_create(game->players, 10);
+	if (player_create_status != SUCCESS) {
+		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
+		return FAILURE;
+	}
+
+	GAME_STATUS entity_manager_create_status = game_entity_manager_create(game->entity_manager);
+	if (entity_manager_create_status != SUCCESS) {
+		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
+		return FAILURE;
+	}
+
+	GAME_STATUS map_create_status = game_map_create(game->map, 500, 500);
+	if (game_map_status != SUCCESS) {
+		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
+		return FAILURE;
+	}
+
+	game->want_to_run = true;
 
 	return SUCCESS;
 }
-
 
 GAME_COLD 
 GAME_INTERNAL GAME_STATUS game_loop(void)
@@ -105,7 +133,7 @@ GAME_INTERNAL GAME_STATUS game_loop(void)
 	const unsigned MAX_UPDATE_STEPS = 6;
 	const float MAX_DELTA_TIME = 1.0f;
 
-	for (bool game_is_running = true; !game_is_running; ) {
+	while (game->want_to_run) {
 		for (u32 prev_ticks = SDL_GetTicks(); !game_is_running; ) {
 			u32 cur_ticks = SDL_GetTicks() - prev_ticks;
 			prev_ticks = cur_ticks;
@@ -132,14 +160,14 @@ GAME_INTERNAL GAME_STATUS game_loop(void)
 
 			switch (handle_events_status) {
 			case EXIT:
-				game_is_running = false;
+				game->want_to_run = false;
 			GAME_STATUS_FAILURE_MAP(GAME_STATUS_EXPAND_AS_CASE)
 				GAME_LOG_FATAL(
 					"Unable to handle game events. Status %s\n", 
 					game_status_str(handle_events_status)
 				);
 
-				game_exit();
+				game_exit(game);
 
 				return handle_events_status;
 			GAME_NO_DEFAULT_CASE
@@ -165,9 +193,9 @@ GAME_INTERNAL GAME_STATUS game_loop(void)
 }
 
 GAME_HOT
-GAME_INTERNAL void game_update(float delta_time)
+GAME_INTERNAL void game_update(G_Game* game, float delta_time)
 {
-	physics_system(entity_manager);
+	system_physics(game, delta_time);
 	for (all_physics_objects) {
 		obj->ay += 2.0f; // gravity		
 
@@ -228,7 +256,7 @@ GAME_INTERNAL void game_update(float delta_time)
 	}
 }
 
-GAME_INTERNAL void game_render(SDL_Renderer* renderer)
+GAME_INTERNAL void game_render(G_Game* game)
 {
 	for (int map_x = 0; map_x < map_width; ++map_x) {
 		for (int map_y = 0; map_y < map_height; ++map_y) {
