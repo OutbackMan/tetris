@@ -7,37 +7,38 @@
 #include "lib/argtable3/argtable.h"
 
 #include "common.h"
-#include "utils/log.h"
+#include "core/loop.h"
+#include "core/events.h"
+#include "core/update.h"
+#include "core/render.h"
+#include "core/quit.h"
 #include "utils/status.h"
 
 GAME_COLD GAME_CHECK
 GAME_STATUS g_game_execute(void)
 {
-	G_Game game = {0};
-
+	G_Game game;
 	GAME_STATUS init_status = game_init(&game);
 
-	switch (init_status) {
-	GAME_STATUS_FAILURE_MAP(GAME_STATUS_EXPAND_AS_CASE)
+	if (init_status != SUCCESS) {
 		GAME_LOG_FATAL(
 			"Unable to initialise game. Status %s\n", 
 			game_status_str(init_status);
 		);
-
 		return init_status;
-	default:
-		break;
 	}
 
-	return game_loop();
+	return g_loop__execute(&game);
 }
 
 GAME_COLD GAME_CHECK
 GAME_INTERNAL GAME_STATUS game_init(G_Game* game, args)
 {
+	// use sdl variant
 	GAME_ASSERT(game != NULL, "%s", "msg");
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+		// use sdl variant
 		GAME_LOG_FATAL(
 			"Unable to initialise game SDL backend: %s\n", 
 			SDL_GetError()
@@ -76,30 +77,35 @@ GAME_INTERNAL GAME_STATUS game_init(G_Game* game, args)
 	}
 
 		
-	// other default values
-	// have the create_() function allocate and free memory directly to allow these types of calls
-	GAME_STATUS camera_create_status = game_camera_create(game->camera);
-	if (camera_create_status != SUCCESS) {
+	G_Camera camera_placeholder;
+	game_camera_create(&camera_placeholder);
+	game->camera = &camera_placeholder;		
+
+	G_GamePlayers players;
+	GAME_STATUS players_create_status = game_players_create(&players, 10);
+	if (players_create_status != SUCCESS) {
 		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
 		return FAILURE;
+	} else {
+		game->players = &players;		
 	}
 
-	GAME_STATUS player_create_status = game_player_create(game->players, 10);
-	if (player_create_status != SUCCESS) {
-		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
-		return FAILURE;
-	}
-
+	G_EntityManager entity_manager;
 	GAME_STATUS entity_manager_create_status = game_entity_manager_create(game->entity_manager);
 	if (entity_manager_create_status != SUCCESS) {
 		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
 		return FAILURE;
+	} else {
+		game->entity_manager = &entity_manager;		
 	}
 
-	GAME_STATUS map_create_status = game_map_create(game->map, 500, 500);
+	G_GameMap map;
+	GAME_STATUS map_create_status = game_map_create(&map, 500, 500);
 	if (game_map_status != SUCCESS) {
 		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
 		return FAILURE;
+	} else {
+		game->map = &map;		
 	}
 
 	game->want_to_run = true;
@@ -107,192 +113,39 @@ GAME_INTERNAL GAME_STATUS game_init(G_Game* game, args)
 	return SUCCESS;
 }
 
-GAME_COLD 
-GAME_INTERNAL GAME_STATUS game_loop(void)
+GAME_INTERNAL void game_camera_create(G_GameCamera* camera)
 {
-	obj object_under_control;
-	obj camera_tracking_object = object_under_control->px - screen_width / 2;
-	bool energising = false;
-	float energy_level = 0.0f;
-	float camera_x = 0.0f; // actual coordinates lag behind target
-	float camera_target_x = 0.0f;
-	bool player_has_control = false;
-	int player_turn_time;
-	
-	// human --> SDLK_Z 	
-	// player --> ai_controlling & ai_want_jump 
-	bool ai_want_jump;
-
-	enum GAME_STATE {
-		GS_STATE_1,
-		GS_STATE_2
-	} current_state, next_state;
-
-	const float DESIRED_FPS = 60.0f;
-	const float DESIRED_FRAME_TIME_MS = 1000.0f / DESIRED_FPS;
-	const unsigned MAX_UPDATE_STEPS = 6;
-	const float MAX_DELTA_TIME = 1.0f;
-
-	while (game->want_to_run) {
-		for (u32 prev_ticks = SDL_GetTicks(); !game_is_running; ) {
-			u32 cur_ticks = SDL_GetTicks() - prev_ticks;
-			prev_ticks = cur_ticks;
-			float total_delta_time = cur_ticks / DESIRED_FRAME_TIME_MS;
-
-			// FSM control supervisor
-			switch (current_state) {
-			case GS_STATE_1:		
-				some_action();
-				next_state = GS_STATE_2;
-			}
-
-			if (computer_is_controlling) {
-				STRATEGY_TYPE strategy = rand() % NUM_STRATEGIES;		
-				if (strategy == DEFENSIVE) {
-					
-				}
-			}
-
-			GAME_STATUS handle_events_status = game_handle_events(
-													window, 
-													renderer
-												);
-
-			switch (handle_events_status) {
-			case EXIT:
-				game->want_to_run = false;
-			GAME_STATUS_FAILURE_MAP(GAME_STATUS_EXPAND_AS_CASE)
-				GAME_LOG_FATAL(
-					"Unable to handle game events. Status %s\n", 
-					game_status_str(handle_events_status)
-				);
-
-				game_exit(game);
-
-				return handle_events_status;
-			GAME_NO_DEFAULT_CASE
-			}
-
-			unsigned update_counter = 0;
-			while (total_delta_time > 0.0f && update_counter < MAX_UPDATE_STEPS) {
-				delta_time = G_MATH_FLOAT_MIN(total_delta_time, MAX_DELTA_TIME);
-				total_delta_time -= delta_time;
-				game_update(delta_time);
-
-				++update_counter;
-			}
-
-			render();
-
-		}
-	}
-
-	game_exit();
-
-	return SUCCESS;
+	camera->x = 0;
+	camera->y = 0;
+	camera->target_x = 0;
+	camera->target_y = 0;
+	camera->tracking_entity_index = 0;
 }
 
-GAME_HOT
-GAME_INTERNAL void game_update(G_Game* game, float delta_time)
+GAME_INTERNAL void game_player_create(G_GamePlayer* game_players, int num_players)
 {
-	system_physics(game, delta_time);
-	for (all_physics_objects) {
-		obj->ay += 2.0f; // gravity		
-
-		obj->vx += obj->ax * delta_time;
-		obj->vy += obj->ay * delta_time;
-
-		float potential_x = obj->px + obj->vx * delta_time;
-		float potential_y = obj->py + obj->vy * delta_time;
-
-		obj->ax = 0.0f;
-		obj->ay = 0.0f;
-		obj->is_stable = false;
-
-		float collision_angle = atan2f(obj->vx, obj->vy);
-		float response_x = 0.0f;
-		float response_y = 0.0f;
-		bool collision_encountered = false;
-
-		// circle and rectangle collisions take similar times to perform, so pick the one that makes most sense for context and that allows to minimise function calls
-		// iterate through semicircle
-		// have arbitrarily chosen small increment to ensure a sufficient amount of pixels are tested 
-		for (float r = collision_angle - PI / 2; r < collision_angle + PI / 2; r += PI / 8.0f) {
-			float test_pos_x = obj->collision_radius * cosf(r) + potential_x;
-			float test_pos_y = obj->collision_radius * sinf(r) + potential_y;
-
-			// clamp test values (always do when reading from memory)
-			if (map[(int)test_pos_y * map_width + (int)test_pos_x] != SKY) {
-				response_x += potential_x - test_pos_x;	
-				response_y += potential_y - test_pos_y;	
-				collision_encountered = true;
-			}
-
-		}
-		
-		if (collision_encountered) {
-			// response vector as normal to tangent of terrain
-			// used for reflection calculation for bounce
-			obj->stable = true;	
-			float velocity_magnitude = sqrtf(obj->px*obj->px + obj->py*obj->py);
-			float response_magnitude = sqrtf(response_x*response_x + response_y*response_y);
-			// calculate reflection vector
-			// account for friction
-		} else {
-			obj->px = potential_x;
-			obj->py = potential_y;
-		}
-
-		if (obj->is_dead) {
-			int on_dead_response = dead_response(obj);
-			if (on_dead_response == EXPLODE) {
-				boom(x, y);		
-			}
-		}
-
-		if (fire_weapon) {
-			
-		}
-	}
-}
-
-GAME_INTERNAL void game_render(G_Game* game)
-{
-	for (int map_x = 0; map_x < map_width; ++map_x) {
-		for (int map_y = 0; map_y < map_height; ++map_y) {
-			switch(map[(map_y + (int)camera_y) * map_width + (map_x + (int)camera_x)]) {
-			case LAND:
-				SDL_Colour colour = GREEN;
-				SDL_SetRenderDrawColour(renderer, colour->r, ...);	
-			case SKY:
-				SDL_Colour colour = GREEN;
-				SDL_SetRenderDrawColour(renderer, colour->r, ...);	
-			}
-			SDL_Rect render_block = {
-				// ...	
-			}
-			SDL_FillRectDraw(renderer, render_block);
-		}
-	}
-
-	for (size_t entity_index = 0; entity_index < MAX_ENTITIES; ++entity_index) {
-		if (entity_manager->mask[entity_index] == COMPONENT_RENDERABLE) {
-			draw_system();	
+	game_players->players = malloc(sizeof(G_GamePlayer) * num_players);
+	if (game_players->players == NULL) {
+		return FNONMEM;		
+	} else {
+		for (int i = 0; i < num_players; ++i) {
+			game_players->player[i] = create_player();
 		}	
-		obj_draw(camera_x, camera_y);
-		if (obj == object_under_control) {
-			draw_block(x, y, COLOUR);		
-		}
 	}
-
-	SDL_RenderPresent(renderer);
 }
 
-
-GAME_COLD
-GAME_INTERNAL void game_quit(SDL_Window* window, SDL_Renderer* renderer)
+GAME_INTERNAL void game_map_create(G_GameMap* map, int width, int height)
 {
-	if (renderer != NULL) SDL_DestroyRenderer(renderer);
-	if (window != NULL) SDL_DestroyWindow(window);
-	if (SDL_WasInit(SDL_INIT_EVERYTHING)) SDL_Quit();
+	map->matrix = malloc(sizeof(G_MAP_TYPE) * width * height);
+	if (map->matrix == NULL) {
+		return FNOMEM;		
+	} else {
+		for (int i = 0; i < width * height; i++) {
+			map->matrix[i] = SKY;		
+		}		
+		map->width = width;
+		map->height = height;
+
+		return SUCCESS;
+	}
 }

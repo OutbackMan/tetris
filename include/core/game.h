@@ -8,13 +8,25 @@ GAME_STATUS g_game_execute(void);
 
 typedef struct {
 	bool want_to_run;	
-	SDL_Window* window;
-	SDL_Renderer* renderer;
-	G_Camera* camera;
+	G_GameWindow* window;
+	G_GameRenderer* renderer;
+	G_GameCamera* camera;
 	G_GamePlayer* players;
+	G_GameMap* map;
 	G_EntityManager* entity_manager;
-	G_Map* map;
 } G_Game;
+
+typedef struct {
+	SDL_Window* window;
+	size_t width;
+	size_t height;
+} G_GameWindow;
+
+typedef struct {
+	SDL_Renderer* renderer;	
+	int base_width_scale;
+	int base_height_scale;
+} G_GameRenderer;
 
 typedef struct {
 	int x;
@@ -22,13 +34,13 @@ typedef struct {
 	int target_x;
 	int target_y;
 	int tracking_entity_index;
-} G_Camera;
+} G_GameCamera;
 
 typedef struct {
 	size_t width;	
 	size_t height;	
-	G_MAP_TYPE* map;
-} G_Map;
+	G_MAP_TYPE* matrix;
+} G_GameMap;
 
 typedef struct {
 	bool has_control;
