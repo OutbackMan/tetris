@@ -20,6 +20,7 @@ typedef struct {
 	SDL_Window* window;
 	size_t width;
 	size_t height;
+	bool is_exposed; // use to determine if to display pause screen
 } G_GameWindow;
 
 typedef struct {
@@ -70,21 +71,6 @@ typedef struct {
 	size_t texture_width;
 	size_t texture_height;
 } Renderable;
-
-// physics
-typedef struct {
-	float px; // move into renderable
-	float py; // move into renderable
-	float vx;
-	float vy;
-	float ax;
-	float ay;
-	float collision_radius;
-	float friction;
-	bool is_stable;
-	int bounce_before_death;
-	bool is_dead;
-} PhysicsObject;
 
 void physics_object_create(obj, x, y)
 {
