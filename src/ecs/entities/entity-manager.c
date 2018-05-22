@@ -1,26 +1,23 @@
 #include "ecs/entity-manager.h"
 
-#include "lib/stretchy-buf.h"
-#include "lib/bit-array.h"
+#include "lib/data-structures/stretchy-buf.h"
+#include "lib/data-structures/bit-array.h"
 
-#include "ecs/components/physics.h"
-#include "ecs/components/render.h"
+#include "ecs/components/components-list.h"
 
-// behind the scenes use stretchy buffers
 typedef struct {
-	BitArray* mask;
+	BitArray** mask;
 	PhysicsComponent* physics;
 } EntityManager;
 
-void entity_manager_create(EntityManager* entity_manager)
+void entity_manager_create(EntityManager* entity_manager, size_t max_component_types)
 {
-	BitArray bit_array;
-	bit_array_create(&bit_array);
+	BitArray bit_array = bit_array_create(max_component_types);
+	STRETCHY_BUF_PUSH(entity_manager->mask, bit_array);
 
 	PhysicsComponent physics_component;
 	physics_component_create(&physics_component);
 
-	entity_manager->mask = bit_array;
 	// ...
 }	
 

@@ -11,6 +11,7 @@ typedef struct {
 	bool is_stable;
 	int bounce_before_death;
 	bool is_dead;
+	bool is_on_ground; // to introduce drag
 } G_ComponentPhysics;
 
 void ecs_component_create_physics(

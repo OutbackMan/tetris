@@ -25,8 +25,6 @@ typedef struct {
 
 typedef struct {
 	SDL_Renderer* renderer;	
-	int base_width_scale;
-	int base_height_scale;
 } G_GameRenderer;
 
 typedef struct {
@@ -40,6 +38,8 @@ typedef struct {
 typedef struct {
 	size_t width;	
 	size_t height;	
+	unsigned x_units_in_viewport_num;
+	unsigned y_units_in_viewport_num;
 	G_MAP_TYPE* matrix;
 } G_GameMap;
 
@@ -70,6 +70,8 @@ typedef struct {
 	SDL_Texture* texture; // sprite
 	size_t texture_width;
 	size_t texture_height;
+	unsigned width_scale;
+	unsigned height_scale;
 } Renderable;
 
 void physics_object_create(obj, x, y)
