@@ -1,5 +1,9 @@
+#include "core/loop.h"
+
+#include "common.h"
+
 GAME_COLD 
-GAME_INTERNAL GAME_STATUS g_loop__execute(G_Game* game)
+GAME_INTERNAL void g_loop__execute(G_Game* game)
 {
 	obj object_under_control;
 	obj camera_tracking_object = object_under_control->px - screen_width / 2;
@@ -64,4 +68,3 @@ GAME_INTERNAL GAME_STATUS g_loop__execute(G_Game* game)
 
 	return SUCCESS;
 }
-

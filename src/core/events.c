@@ -1,45 +1,35 @@
-GAME_HOT GAME_CHECK 
+#include "core/events.h"
+
+GAME_HOT
 GAME_STATUS game_handle_events(G_Game* game)
 {
-	GAME_STATUS handle_event_status = DEFAULT;
+	SDL_assert_release(game != NULL);
 
 	SDL_Event event = {0};
 	while (SDL_PollEvent(&event)) {
-		handle_event_status = game_handle_event(event.type);
-
-		if (handle_event_status != SUCCESS) {
-			GAME_LOG_FATAL(
-				"Unable to handle game event. Status %s\n", 
-				game_status_str(handle_event_status)
-			);
-
-			return handle_event_status;
+		switch (event->type) {
+		case SDL_QUIT:
+			game->want_to_run = false;
+			break;
+		case SDL_WINDOWEVENT:
+			events_handle_window_events(G_Game* game);
+			break;
+		case SDL_KEYUP:
+			events_handle_key_up(event->key);
+			break;
+		case SDL_KEYDOWN:
+			events_handle_key_down(event->key);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			events_handle_mouse_up();
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			events_handle_mouse_down();
+			break;
+		case SDL_MOUSEMOTION:
+			events_handle_mouse_motion();
+			break;
 		}
-	}
-
-	return SUCCESS;
-}
-
-GAME_HOT GAME_CHECK 
-GAME_INTERNAL GAME_STATUS game_handle_event(SDL_Event* event)
-{
-	switch (event->type) {
-	case SDL_QUIT:
-		game->want_to_run = false;
-		break;
-	case SDL_WINDOWEVENT:
-		break;
-	case SDL_KEYUP:
-	case SDL_KEYDOWN:
-		events_handle_keyboard(event->key);
-		break;
-	case SDL_MOUSEBUTTONUP:
-	case SDL_MOUSEBUTTONDOWN:
-		events_handle_mouse_buttons();
-		break;
-	case SDL_MOUSEMOTION:
-		events_handle_mouse_motion();
-		break;
 	}
 }
 
@@ -47,39 +37,40 @@ GAME_INTERNAL
 GAME_STATUS game_handle_window_events(G_GameWindow* game_window, SDL_WindowEvent* event)
 {
 	switch (window_event->event) {
-	case SDL_WINDOWEVENT_RESIZED:
-		// ..
-		break;
 	case SDL_WINDOWEVENT_EXPOSED:
 		game_window->is_exposed = true;
 		break;
+	}
 
 }
 
-GAME_INTERNAL GAME_STATUS events_handle_keyboard(G_Game* game, SDL_KeybordEvent* keyboard_event)
+GAME_INTERNAL inline bool key_down_quit(SDL_KeybordEvent* keyboard_event)
 {
-	const bool KEY_IS_PRESSED = (keyboard_event->state == SDL_PRESSED);
+	return ((keyboard_event->keysym.sym == SDLK_q && 
+			keyboard_event->keysym.mod == KMOD_CTRL) ||
+			keyboard_event->keysym.sym == SDLK_ESCAPE);
+}
 
-	// and escape
-	if (keyboard_event->keysym.sym == SDLK_q && keyboard_event->keysym.mod == KMOD_CTRL) {
+GAME_INTERNAL GAME_STATUS events_handle_key_down(G_Game* game, SDL_KeybordEvent* keyboard_event)
+{
+	if (key_down_quit(keyboard_event)) {
 		game->want_to_run = false;
 	}
-
 	
 	if (keyboard_event->keysym.sym == SDLK_w && !keyboard_event->repeat)
 		create_map(game->map, game->map->width, game->map->height);
 	}
 
-	case SDLK_X:
+	case SDLK_x:
 	// jump
-		physics_system_jump(entity_manager, true);
+		physics_system_jump_left(entity_manager);
 		entity_manager->physics[entity_under_control].is_stable;
 				object_under_control->vx = +4.0f;		
 				object_under_control->vy = -8.0f;		
 				object_under_control->is_stable = false;		
 			}	
 		}
-	case SDLK_Z:
+	case SDLK_z:
 	// jump
 		if (object_under_control != NULL) {
 			if (object_under_control->is_stable) {
@@ -107,7 +98,6 @@ GAME_INTERNAL GAME_STATUS events_handle_keyboard(G_Game* game, SDL_KeybordEvent*
 	}
 }
 
-uint32_t* SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)
 GAME_INTERNAL GAME_STATUS game_handle_mouse_button_events(SDL_MouseButtonEvent* mouse_motion_event)
 {
 	if (event->button == SDL_BUTTON_MIDDLE) {

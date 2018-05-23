@@ -4,7 +4,10 @@
 
 #include <stdbool.h>
 
-#include "lib/argtable3/argtable.h"
+#define ARGTABLE3_IMPLEMENTATION
+#include "lib/utils/argtable3.h"
+#define XMEM_IMPLEMENTATION
+#include "lib/utils/xmem.h"
 
 #include "common.h"
 #include "core/loop.h"
@@ -12,43 +15,46 @@
 #include "core/update.h"
 #include "core/render.h"
 #include "core/quit.h"
-#include "utils/status.h"
+#include "utils/error.h"
 
-GAME_COLD GAME_CHECK
-GAME_STATUS g_game_execute(void)
+#ifdef BUILD_MODE_DEBUG
+#define SDL_ASSERT_LEVEL 2
+SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
+#elif defined(BUILD_MODE_RELEASE)
+#define SDL_ASSERT_LEVEL 1
+SDL_LogSetAllPriority(SDL_LOG_PRIORITY_CRITICAL);
+SDL_assert/_release();
+#endif
+
+GAME_COLD 
+void g_game_execute(void)
 {
-	G_Game game;
-	GAME_STATUS init_status = game_init(&game);
-
-	if (init_status != SUCCESS) {
-		GAME_LOG_FATAL(
-			"Unable to initialise game. Status %s\n", 
-			game_status_str(init_status);
-		);
-		return init_status;
+	Game* game = game_create();
+	if (game == NULL) {
+		SDL_LOG("%s", error_get_msg_str());		
 	}
 
-	return g_loop__execute(&game);
+	g_loop__execute(&game);
 }
 
-GAME_COLD GAME_CHECK
-GAME_INTERNAL GAME_STATUS game_init(G_Game* game, args)
+GAME_COLD
+GAME_INTERNAL Game* game_create(void)
 {
-	// use sdl variant
-	GAME_ASSERT(game != NULL, "%s", "msg");
+	// parse_args()
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		// use sdl variant
-		GAME_LOG_FATAL(
+		SDL_LogCritical(
+			SDL_LOG_CATEGORY_SYSTEM, 
 			"Unable to initialise game SDL backend: %s\n", 
 			SDL_GetError()
-		);	
-
-		return FSDL2;
+		);
+		return;
 	}
 
 	const char* window_title = GAME_UNAME" ["GAME_COMPILER" - x86/64]("\
 								GAME_BUILD_MODE")";
+
+	Game* game = xmalloc(sizeof(Game));
 
 	game->window = SDL_CreateWindow(
 						window_title, 
@@ -60,8 +66,11 @@ GAME_INTERNAL GAME_STATUS game_init(G_Game* game, args)
 					);
 	
 	if (game->window == NULL) {
-		GAME_LOG_FATAL("Unable to create game window: %s\n", SDL_GetError());	
-		return FSDL2;
+		SDL_LogCritical(
+			SDL_LOG_CATEGORY_VIDEO, 
+			"Unable to create gmae window: %s\n", 
+			SDL_GetError()
+		);
 	}
 
 	const int DEFAULT_RENDERING_DRIVER = -1;
@@ -71,81 +80,51 @@ GAME_INTERNAL GAME_STATUS game_init(G_Game* game, args)
 							GAME_SDL_NO_FLAGS
 						);
 
-	if (game->renderer == NULL) {
-		GAME_LOG_FATAL("Unable to create game renderer: %s\n", SDL_GetError());	
-		return FSDL2;
+	if (game->window == NULL) {
+		SDL_LogCritical(
+			SDL_LOG_CATEGORY_RENDER, 
+			"Unable to create game renderer: %s\n", 
+			SDL_GetError()
+		);
 	}
 
 		
-	G_Camera camera_placeholder;
-	game_camera_create(&camera_placeholder);
-	game->camera = &camera_placeholder;		
-
-	G_GamePlayers players;
-	GAME_STATUS players_create_status = game_players_create(&players, 10);
-	if (players_create_status != SUCCESS) {
-		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
-		return FAILURE;
-	} else {
-		game->players = &players;		
-	}
-
-	G_EntityManager entity_manager;
-	GAME_STATUS entity_manager_create_status = game_entity_manager_create(game->entity_manager);
-	if (entity_manager_create_status != SUCCESS) {
-		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
-		return FAILURE;
-	} else {
-		game->entity_manager = &entity_manager;		
-	}
-
-	G_GameMap map;
-	GAME_STATUS map_create_status = game_map_create(&map, 500, 500);
-	if (game_map_status != SUCCESS) {
-		GAME_LOG_FATAL("%s code %s", game_str_status(camera_create_status);
-		return FAILURE;
-	} else {
-		game->map = &map;		
-	}
-
+	game->camera = game_camera_create();
+	game->players = game_players_create(10);
+	game->entity_manager = game_entity_manager_create();
+	game->map = game_map_create(500, 500);
 	game->want_to_run = true;
-
-	return SUCCESS;
 }
 
-GAME_INTERNAL void game_camera_create(G_GameCamera* camera)
+GAME_INTERNAL G_Camera* game_camera_create()
 {
+	G_Camera* camera = xmalloc(sizeof(G_Camera));
+
 	camera->x = 0;
 	camera->y = 0;
 	camera->target_x = 0;
 	camera->target_y = 0;
 	camera->tracking_entity_index = 0;
+
+	return camera;
 }
 
-GAME_INTERNAL void game_player_create(G_GamePlayer* game_players, int num_players)
+GAME_INTERNAL G_Player* game_player_create(int num_players)
 {
-	game_players->players = malloc(sizeof(G_GamePlayer) * num_players);
-	if (game_players->players == NULL) {
-		return FNONMEM;		
-	} else {
-		for (int i = 0; i < num_players; ++i) {
-			game_players->player[i] = create_player();
-		}	
-	}
+	G_Player* players = xmalloc(sizeof(G_GamePlayer) * num_players);
+	for (int i = 0; i < num_players; ++i) {
+		// ...
+		*players++ = create_player();
+	}	
+	return players;
 }
 
-GAME_INTERNAL void game_map_create(G_GameMap* map, int width, int height)
+GAME_INTERNAL G_Map* game_map_create(int width, int height)
 {
-	map->matrix = malloc(sizeof(G_MAP_TYPE) * width * height);
-	if (map->matrix == NULL) {
-		return FNOMEM;		
-	} else {
-		for (int i = 0; i < width * height; i++) {
-			map->matrix[i] = SKY;		
-		}		
-		map->width = width;
-		map->height = height;
-
-		return SUCCESS;
-	}
+	G_Map* map = xmalloc(sizeof(G_Map));
+	for (int i = 0; i < width * height; i++) {
+		map->matrix[i] = SKY;		
+	}		
+	map->width = width;
+	map->height = height;
 }
