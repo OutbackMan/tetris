@@ -10,6 +10,7 @@ GAME_STATUS g_game_execute(void);
 
 typedef struct {
 	bool want_to_run;	
+	// current_map
 	G_GameWindow* window;
 	G_GameRenderer* renderer;
 	G_GameCamera* camera;
@@ -37,13 +38,6 @@ typedef struct {
 	int tracking_entity_index;
 } G_GameCamera;
 
-typedef struct {
-	size_t width;	
-	size_t height;	
-	unsigned x_units_in_viewport_num;
-	unsigned y_units_in_viewport_num;
-	G_MAP_TYPE* matrix;
-} G_GameMap;
 
 typedef struct {
 	bool has_control;

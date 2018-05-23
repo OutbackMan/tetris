@@ -149,12 +149,3 @@ void game_players_destroy(G_GamePlayers* players)
 	free(players);
 }
 
-GAME_INTERNAL G_Map* game_map_create(int width, int height)
-{
-	G_Map* map = xmalloc(sizeof(G_Map));
-	for (int i = 0; i < width * height; i++) {
-		map->matrix[i] = SKY;		
-	}		
-	map->width = width;
-	map->height = height;
-}
