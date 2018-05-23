@@ -1,9 +1,10 @@
 typedef struct {
 	SDL_Texture* texture;
-	unsigned width;
-	unsigned height;
+	unsigned base_width; // allow for sheets
+	unsigned base_height;
 	unsigned width_scale;
 	unsigned height_scale;
+	unsigned sheet_index;
 } SpriteComponent;
 
 // assume sheets are same width and height
@@ -32,6 +33,8 @@ SpriteComponent* sprite_component_create(
 
 	sprite_component->width_scale = width_scale;
 	sprite_component->height_scale = height_scale;
+	sprite_component->sheet_index = 0;
+	
 
 	return sprite_component;
 }

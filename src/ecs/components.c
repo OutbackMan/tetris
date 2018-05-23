@@ -12,19 +12,6 @@
 	create_entity_component1()
 	create_entity_component2()
 
-// components
-typedef struct {} Component;
-create_component()
-
-// systems
-	// single
-
-	// compositions
-
-void g_component_create_render(EntityManager* entity_manager)
-{
-	entity_manager		
-}
 
 void g_entity_manager_create_index(EntityManager* entity_manager)
 {
