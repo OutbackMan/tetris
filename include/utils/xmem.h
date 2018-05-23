@@ -3,8 +3,8 @@
 
 #include <stddef.h>
 
-void* xmalloc(size_t num_bytes);
-void* xcalloc(size_t num_elements, size_t element_size);
-void* xrealloc(void* ptr, size_t num_bytes);
+void* g_xmalloc(size_t num_bytes);
+void* g_xcalloc(size_t num_elements, size_t element_size);
+void* g_xrealloc(void* ptr, size_t num_bytes);
 
 #endif

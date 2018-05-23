@@ -1,7 +1,9 @@
 #include "core/events.h"
 
-GAME_HOT
-GAME_STATUS game_handle_events(G_Game* game)
+#include <SDL2/SDL.h>
+
+G_HOT
+void g_events_handle(G_Game* game)
 {
 	SDL_assert(game != NULL);
 
@@ -9,59 +11,75 @@ GAME_STATUS game_handle_events(G_Game* game)
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_QUIT:
-			events_handle_quit(G_Game* game);
+			events_handle_quit(game);
 			break;
 		case SDL_WINDOWEVENT:
-			events_handle_window(G_Game* game, &event.window);
+			events_handle_window(game, &event.window);
 			break;
 		case SDL_KEYDOWN:
-			events_handle_key_down(G_Game* game, &event.key);
+			events_handle_key_down(game, &event.key);
 			break;
 		case SDL_KEYUP:
-			events_handle_key_up(G_Game* game, &event.key);
+			events_handle_key_up(game, &event.key);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			events_handle_mouse_down(G_Game* game, &event.button);
+			events_handle_mouse_down(game, &event.button);
 			break;
 		case SDL_MOUSEBUTTONUP:
-			events_handle_mouse_up(G_Game* game, &event.button);
+			events_handle_mouse_up(game, &event.button);
 			break;
 		case SDL_MOUSEMOTION:
-			events_handle_mouse_motion(G_Game* game, &event.motion);
+			events_handle_mouse_motion(game, &event.motion);
 			break;
 		}
 	}
 }
 
-GAME_INTERNAL
-GAME_STATUS game_handle_window(G_GameWindow* game_window, SDL_WindowEvent* window_event)
+G_INTERNAL
+void events_handle_quit(G_Game* game)
 {
+	SDL_assert(game != NULL);
+
+	game->want_to_run = false;	
+}
+
+G_INTERNAL
+void events_handle_window(G_Game* game, SDL_WindowEvent* window_event)
+{
+	SDL_assert(game != NULL);
+	SDL_assert(window_event != NULL);
+
 	switch (window_event->type) {
+	case SDL_WINDOWEVENT_RESIZED:
+	case SDL_WINDOWEVENT_SIZE_CHANGED:
+		game->window->width = window_event->data1;
+		game->window->height = window_event->data2;
+		break;
 	case SDL_WINDOWEVENT_EXPOSED:
-		game_window->is_exposed = true;
+		game->window->is_exposed = true;
 		break;
 	}
 
 }
 
-GAME_INTERNAL inline bool key_down_quit(SDL_KeybordEvent* keyboard_event)
+#define IS_KEY_DOWN_QUIT_KEY(keyboard_event) \
+	((keyboard_event->keysym.sym == SDLK_q \
+	&& keyboard_event->keysym.mod == KMOD_CTRL) \
+	|| keyboard_event->keysym.sym == SDLK_ESCAPE)
+G_INTERNAL void events_handle_key_down(G_Game* game, SDL_KeybordEvent* keyboard_event)
 {
-	return ((keyboard_event->keysym.sym == SDLK_q && 
-			keyboard_event->keysym.mod == KMOD_CTRL) ||
-			keyboard_event->keysym.sym == SDLK_ESCAPE);
-}
+	SDL_assert(game != NULL);
+	SDL_assert(keyboard_event != NULL);
 
-GAME_INTERNAL GAME_STATUS events_handle_key_down(G_Game* game, SDL_KeybordEvent* keyboard_event)
-{
-	if (key_down_quit(keyboard_event)) {
+	if (IS_KEY_DOWN_QUIT_KEY(keyboard_event)) {
 		game->want_to_run = false;
 	}
 	
 	if (keyboard_event->keysym.sym == SDLK_w && !keyboard_event->repeat)
-		create_map(game->map, game->map->width, game->map->height);
+		g_map_create(game->map, game->map->width, game->map->height);
 	}
 
-	case SDLK_x:
+	if (keyboard_event->keysym.sym == SDLK_x)
 	// jump
 		physics_system_jump_left(entity_manager);
 		entity_manager->physics[entity_under_control].is_stable;
@@ -97,9 +115,21 @@ GAME_INTERNAL GAME_STATUS events_handle_key_down(G_Game* game, SDL_KeybordEvent*
 
 	}
 }
+#undef IS_KEY_DOWN_QUIT_KEY
 
-GAME_INTERNAL GAME_STATUS game_handle_mouse_button_events(SDL_MouseButtonEvent* mouse_motion_event)
+G_INTERNAL void events_handle_key_up(G_Game* game, SDL_KeybordEvent* keyboard_event)
 {
+	SDL_assert(game != NULL);
+	SDL_assert(keyboard_event != NULL);
+
+	
+}
+
+G_INTERNAL void events_handle_mouse_down(SDL_MouseButtonEvent* mouse_button_event)
+{
+	SDL_assert(game != NULL);
+	SDL_assert(mouse_button_event != NULL);
+
 	if (event->button == SDL_BUTTON_MIDDLE) {
 		// create PHYSICS | RENDERABLE component
 		add_drawable_physics_object(mouse_x + camera_x, mouse_y + camera_y);		
@@ -111,8 +141,18 @@ GAME_INTERNAL GAME_STATUS game_handle_mouse_button_events(SDL_MouseButtonEvent* 
 	}
 }
 
-GAME_INTERNAL GAME_STATUS game_handle_mouse_motion_events(SDL_MouseMotionEvent* mouse_motion_event)
+G_INTERNAL void events_handle_mouse_up(SDL_MouseButtonEvent* mouse_button_event)
 {
+	SDL_assert(game != NULL);
+	SDL_assert(mouse_button_event != NULL);
+
+}
+
+G_INTERNAL void events_handle_mouse_motion(SDL_MouseMotionEvent* mouse_motion_event)
+{
+	SDL_assert(game != NULL);
+	SDL_assert(mouse_motion_event != NULL);
+
 	float map_scroll_speed = 400.0f;
 	if (event->x < 5) camera_pos_x -= map_scroll_speed * delta_time;
 	if (event->x > window_width - 5) camera_pos_x += map_scroll_speed * delta_time;

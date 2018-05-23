@@ -1,12 +1,12 @@
 /*******************************************************************************
 
-Copyright (C) 2018, @GAME_CREATOR@
+Copyright (C) 2018, @G_CREATOR@
 
 g_common.h
 	"Common macro definitions."
 
-GAME:
-	"@GAME_DESCRIPTION@"
+G:
+	"@G_DESCRIPTION@"
 
 License:
 	"This file is subject to the terms and conditions defined in
@@ -25,49 +25,35 @@ License:
  * CMAKE DEFINITIONS
  *****************************************************************************/
 
-#cmakedefine GAME_VERSION "@GAME_VERSION@"
-#cmakedefine GAME_BUG_REPORT_ADDRESS "@GAME_BUG_REPORT_ADDRESS@"
-#cmakedefine GAME_NAME "@GAME_NAME@"
-#cmakedefine GAME_UNAME "@GAME_UNAME@"
-#cmakedefine GAME_LNAME "@GAME_LNAME@"
-#cmakedefine GAME_BINARY_STRING "@GAME_BINARY_STRING@"
-#cmakedefine GAME_DESCRIPTION "@GAME_DESCRIPTION@"
-#cmakedefine GAME_CREATOR "@GAME_CREATOR@"
+#cmakedefine G_VERSION "@G_VERSION@"
+#cmakedefine G_BUG_REPORT_ADDRESS "@G_BUG_REPORT_ADDRESS@"
+#cmakedefine G_NAME "@G_NAME@"
+#cmakedefine G_UNAME "@G_UNAME@"
+#cmakedefine G_LNAME "@G_LNAME@"
+#cmakedefine G_BINARY_STRING "@G_BINARY_STRING@"
+#cmakedefine G_DESCRIPTION "@G_DESCRIPTION@"
+#cmakedefine G_CREATOR "@G_CREATOR@"
 
 /******************************************************************************
- * COMMON MACROS
+ * MACROS AND FUNCTIONS
  *****************************************************************************/
 
-// include something regarding performance monitoring
+#define G_TO_STRING(val)	#val
+#define G_STRINGIFY(str)	G_TO_STRING(str)
 
-#define GAME_TO_STRING(val)	#val
-#define GAME_STRINGIFY(str)	GAME_TO_STRING(str)
+#define G_INTERNAL static
+#define G_LOCAL_PERSIST static
 
-#define GAME_INTERNAL static
-#define GAME_LOCAL_PERSIST static
+#define G_FALLTHROUGH_INTENDED
+#define G_NO_DEFAULT_CASE
+#define G_SDL_NO_FLAGS 0
 
-#define GAME_LEAVE(func_leave_code) \
-	do { \
-		leave_code = func_leave_code; \
-		goto __leave; \
-	} while (0);
-
-#define GAME_FALLTHROUGH_INTENDED
-#define GAME_NO_DEFAULT_CASE
-
-#ifdef GAME_BUILD_MODE_DEBUG
-#ifdef _MSC_VER
-#include <intrin.h>
-#else
-static inline void __debugbreak(void) { exit(EXIT_FAILURE); }
 #endif
-#define GAME_BREAKPOINT() __debugbreak()
-#else
-#define GAME_BREAKPOINT() exit(EXIT_FAILURE)
-#endif
+
+void g_exit(int exit_status);
 
 /******************************************************************************
- * COMMON TYPEDEFS
+ * TYPEDEFS
  *****************************************************************************/
 
 typedef uint8_t u8;
@@ -84,23 +70,23 @@ typedef int64_t int64;
  *****************************************************************************/
 
 #if defined(__GNUC__)
-#define GAME_COMPILER "gcc-"GAME_STRINGIFY(__GNUC__)"." \
-	GAME_STRINGIFY(__GNUC_MINOR__)"." \
-	GAME_STRINGIFY(__GNUC_PATCHLEVEL__)
+#define G_COMPILER "gcc-"G_STRINGIFY(__GNUC__)"." \
+	G_STRINGIFY(__GNUC_MINOR__)"." \
+	G_STRINGIFY(__GNUC_PATCHLEVEL__)
 #elif defined(__llvm__)
-#define GAME_COMPILER "llvm-"GAME_STRINGIFY(__clang_major__)"." \
-		GAME_STRINGIFY(__clang_minor__)"." \
-		GAME_STRINGIFY(__clang_patchlevel__)
+#define G_COMPILER "llvm-"G_STRINGIFY(__clang_major__)"." \
+		G_STRINGIFY(__clang_minor__)"." \
+		G_STRINGIFY(__clang_patchlevel__)
 #elif defined(_MSC_VER)
 #if _MSC_VER <= 1800
-#define GAME_COMPILER "MSVC 2013"
+#define G_COMPILER "MSVC 2013"
 #elif _MSC_VER <= 1900
-#define GAME_COMPILER "MSVC 2015"
+#define G_COMPILER "MSVC 2015"
 #elif _MSC_VER <= 1912
-#define GAME_COMPILER "MSVC 2017"
+#define G_COMPILER "MSVC 2017"
 #endif
 #else
-#define GAME_COMPILER "Unsupported Compiler"
+#define G_COMPILER "Unsupported Compiler"
 #endif
 
 /******************************************************************************
@@ -108,39 +94,39 @@ typedef int64_t int64;
  *****************************************************************************/
 
 #if defined(__GNUC__) || defined(__llvm__) 
-#define GAME_ALIGN(val) __attribute__((aligned(val)))
-#define GAME_PURE __attribute__((pure))
-#define GAME_CONST __attribute__((const))
-#define GAME_COLD __attribute__((cold))
-#define GAME_HOT __attribute__((hot))
-#define GAME_CHECK __attribute__((warn_unused_result))
-#define GAME_DEPRECATED __attribute__((deprecated))
-#define GAME_USED __attribute__((used))
-#define GAME_UNUSED __attribute__((unused))
-#define GAME_PACKED __attribute__((packed))
-#define GAME_LIKELY(val) __builtin_expect(!!(val), 1)
-#define GAME_UNLIKELY(val) __builtin_expect(!!(val), 0)
-#define GAME_DESIGNATED __attribute__((designated_init))
-#define GAME_FLATTEN __attribute__((flatten))
+#define G_ALIGN(val) __attribute__((aligned(val)))
+#define G_PURE __attribute__((pure))
+#define G_CONST __attribute__((const))
+#define G_COLD __attribute__((cold))
+#define G_HOT __attribute__((hot))
+#define G_CHECK __attribute__((warn_unused_result))
+#define G_DEPRECATED __attribute__((deprecated))
+#define G_USED __attribute__((used))
+#define G_UNUSED __attribute__((unused))
+#define G_PACKED __attribute__((packed))
+#define G_LIKELY(val) __builtin_expect(!!(val), 1)
+#define G_UNLIKELY(val) __builtin_expect(!!(val), 0)
+#define G_DESIGNATED __attribute__((designated_init))
+#define G_FLATTEN __attribute__((flatten))
 #elif defined (_MSC_VER)
 #define inline __inline
-#define GAME_ALIGN(val) __declspec(align(val))
-#define GAME_DEPRECATED __declspec(deprecated)
+#define G_ALIGN(val) __declspec(align(val))
+#define G_DEPRECATED __declspec(deprecated)
 #else
-#define GAME_ALIGN(val)
-#define GAME_PURE
-#define GAME_CONST
-#define GAME_COLD
-#define GAME_HOT
-#define GAME_CHECK
-#define GAME_DEPRECATED
-#define GAME_USED
-#define GAME_UNUSED
-#define GAME_PACKED
-#define GAME_LIKELY(val)
-#define GAME_UNLIKELY(val)
-#define GAME_DESIGNATED
-#define GAME_FLATTEN
+#define G_ALIGN(val)
+#define G_PURE
+#define G_CONST
+#define G_COLD
+#define G_HOT
+#define G_CHECK
+#define G_DEPRECATED
+#define G_USED
+#define G_UNUSED
+#define G_PACKED
+#define G_LIKELY(val)
+#define G_UNLIKELY(val)
+#define G_DESIGNATED
+#define G_FLATTEN
 #endif
 
 #endif

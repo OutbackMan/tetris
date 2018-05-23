@@ -8,10 +8,10 @@ function(HandleBuildType target)
 	  set(CMAKE_BUILD_TYPE "Debug" PARENT_SCOPE)
 	endif(NOT CMAKE_BUILD_TYPE)
 
-	target_compile_definitions(${target} PUBLIC $<$<CONFIG:Debug>:GAME_BUILD_MODE_DEBUG>)
-	target_compile_definitions(${target} PUBLIC $<$<CONFIG:Release>:GAME_BUILD_MODE_RELEASE>)
-	target_compile_definitions(${target} PUBLIC $<$<CONFIG:MinSizeRel>:GAME_BUILD_MODE_RELEASE>)
-	target_compile_definitions(${target} PUBLIC $<$<CONFIG:RelWithDebInfo>:GAME_BUILD_MODE_DEBUG>)
+	target_compile_definitions(${target} PUBLIC $<$<CONFIG:Debug>:G_BUILD_MODE_DEBUG>)
+	target_compile_definitions(${target} PUBLIC $<$<CONFIG:Release>:G_BUILD_MODE_RELEASE>)
+	target_compile_definitions(${target} PUBLIC $<$<CONFIG:MinSizeRel>:G_BUILD_MODE_RELEASE>)
+	target_compile_definitions(${target} PUBLIC $<$<CONFIG:RelWithDebInfo>:G_BUILD_MODE_DEBUG>)
 
 	if(${CMAKE_C_COMPILER_ID} MATCHES "GNU|Clang")
 		string(CONCAT

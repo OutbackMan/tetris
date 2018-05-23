@@ -4,20 +4,19 @@
 #include <stdlib.h>
 
 #include "common.h"
-#include "utils/log.h"
-#include "utils/assert.h"
-#include "utils/status.h"
-#include "utils/args.h"
+#include "core/game/game.h"
 
 int main(int argc, char** argv)
 {
-	GAME_STATUS game_run_status = g_game_execute();
+#ifdef G_BUILD_MODE_RELEASE
+#define SDL_ASSERT_LEVEL 1
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_CRITICAL);
+#elif defined(G_BUILD_MODE_DEBUG)
+#define SDL_ASSERT_LEVEL 2
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
+#endif
 
-	// SDL_Log
-	GAME_LOG_INFO(
-		"Game exited with status: %s", 
-		game_str_status(game_run_status)
-	);
+	g_game_execute();
 
-	return game_run_status;	
+	return EXIT_SUCCESS;	
 }

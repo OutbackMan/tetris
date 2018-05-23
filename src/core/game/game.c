@@ -5,8 +5,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "lib/argtable3.h"
-
 #include "common.h"
 #include "core/game/camera.h"
 #include "core/game/map.h"
@@ -15,24 +13,16 @@
 #include "utils/error.h"
 #include "utils/xmem.h"
 
-#ifdef G_BUILD_MODE_RELEASE
-#define SDL_ASSERT_LEVEL 1
-SDL_LogSetAllPriority(SDL_LOG_PRIORITY_CRITICAL);
-#elif defined(G_BUILD_MODE_DEBUG)
-#define SDL_ASSERT_LEVEL 2
-SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
-#endif
-
 inline void g_game_exit(int exit_status)
 {
 	SDL_Quit();
 	exit(exit_status);
 }
 
-GAME_COLD 
+G_COLD 
 void g_game_execute(void)
 {
-	Game* game = game_create();
+	G_Game* game = game_create();
 	if (game == NULL) {
 		SDL_LogCritical(
 			SDL_LOG_CATEGORY_APPLICATION, 
@@ -45,10 +35,9 @@ void g_game_execute(void)
 	}
 }
 
-GAME_COLD
-GAME_INTERNAL Game* game_create(void)
+G_COLD
+G_INTERNAL G_Game* game_create(void)
 {
-	// parse_args()
 	Game* game = NULL;
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -61,10 +50,10 @@ GAME_INTERNAL Game* game_create(void)
 		return;
 	}
 
-	const char* window_title = GAME_UNAME" ["GAME_COMPILER" - x86/64]("\
-								GAME_BUILD_MODE")";
+	const char* window_title = G_UNAME" ["G_COMPILER" - x86/64]("\
+								G_BUILD_MODE")";
 
-	game = xmalloc(sizeof(Game));
+	game = g_xmalloc(sizeof(Game));
 
 	game->window = SDL_CreateWindow(
 						window_title, 
@@ -88,7 +77,7 @@ GAME_INTERNAL Game* game_create(void)
 	game->renderer = SDL_CreateRenderer(
 							game->window, 
 							DEFAULT_RENDERING_DRIVER, 
-							GAME_SDL_NO_FLAGS
+							G_SDL_NO_FLAGS
 						);
 
 	if (game->window == NULL) {
@@ -108,7 +97,7 @@ GAME_INTERNAL Game* game_create(void)
 	game->want_to_run = true;
 }
 
-GAME_INTERNAL G_Camera* game_camera_create()
+G_INTERNAL G_Camera* game_camera_create()
 {
 	G_Camera* camera = xmalloc(sizeof(G_Camera));
 
@@ -121,7 +110,7 @@ GAME_INTERNAL G_Camera* game_camera_create()
 	return camera;
 }
 
-GAME_INTERNAL G_GamePlayers* game_players_create(int num_players)
+G_INTERNAL G_GamePlayers* game_players_create(int num_players)
 {
 	G_GamePlayers* players = xmalloc(sizeof(G_GamePlayers));
 	players->players = xmalloc(sizeof(G_GamePlayer) * num_players);

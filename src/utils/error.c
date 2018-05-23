@@ -1,27 +1,25 @@
-#include "utils/status.h"
+#include "utils/error.h"
 
-#include <stdbool.h>
+#include "common.h"
 
-#define EXPAND_GAME_STATUS_AS_CASE(status, str) \
-	case status: return str; 	
-const char* game_status_str(GAME_STATUS status)
+static struct {
+	ERROR_TYPE current_error_type;		
+} __ERROR;
+
+#define ERROR_MAP_EXPAND_AS_CASE(type, msg) \
+	case type: return [ ## type ## ] ## msg; 	
+const char* g_get_error(void)
 {
-	switch (status) {
-		GAME_STATUS_MAP(EXPAND_GAME_STATUS_AS_CASE)				
-	}		
-	
-	return "unknown status";
+	switch (type) {
+		G_ERROR_MAP(ERROR_MAP_EXPAND_AS_CASE)		
+	default:
+		return "unknown error";
+	}
 }
-#undef EXPAND_GAME_STATUS_AS_CASE
+#undef ERROR_MAP_EXPAND_AS_CASE
 
-#define EXPAND_GAME_STATUS_AS_CASE(status, _) \
-	case status: return #status; 	
-const char* game_status_name(GAME_STATUS status)
+void g_set_error(ERROR_TYPE error_type)
 {
-	switch (status) {
-		GAME_STATUS_MAP(EXPAND_GAME_STATUS_AS_CASE)				
-	}		
-	
-	return "unknown status";
+	__ERROR.current_error_type = error_type;		
 }
-#undef EXPAND_GAME_STATUS_AS_CASE
+

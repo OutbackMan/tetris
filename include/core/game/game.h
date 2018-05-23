@@ -1,23 +1,24 @@
-#ifndef __core_game_h__
-#define __core_game_h__
+#ifndef __core_game_game_h__
+#define __core_game_game_h__
 
 #include "common.h"
 
-void g_game_exit(int exit_status);
-
-GAME_COLD
-GAME_STATUS g_game_execute(void);
 
 typedef struct {
 	bool want_to_run;	
 	// current_map
-	G_GameWindow* window;
-	G_GameRenderer* renderer;
-	G_GameCamera* camera;
-	G_GamePlayers* players;
-	G_GameMap* map;
+	G_Window* window;
+	G_Renderer* renderer;
+	G_Camera* camera;
+	G_Players* players;
+	G_Map* map;
 	G_EntityManager* entity_manager;
 } G_Game;
+
+void g_game_destroy(G_Game* game);
+
+GAME_COLD
+GAME_STATUS g_game_execute(void);
 
 typedef struct {
 	SDL_Window* window;
@@ -30,26 +31,8 @@ typedef struct {
 	SDL_Renderer* renderer;	
 } G_GameRenderer;
 
-typedef struct {
-	int x;
-	int y;
-	int target_x;
-	int target_y;
-	int tracking_entity_index;
-} G_GameCamera;
 
 
-typedef struct {
-	bool has_control;
-	bool is_computer_controlled;		
-	bool is_energising;
-	float energy_level;
-} G_GamePlayer;
-
-typedef struct {
-	size_t num;
-	G_GamePlayer* players;
-} G_GamePlayers;
 
 // ai
 // determine angle formed from parabolic trajectory relating to range and elevation
