@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+void g_game_exit(int exit_status);
+
 GAME_COLD
 GAME_STATUS g_game_execute(void);
 
@@ -11,7 +13,7 @@ typedef struct {
 	G_GameWindow* window;
 	G_GameRenderer* renderer;
 	G_GameCamera* camera;
-	G_GamePlayer* players;
+	G_GamePlayers* players;
 	G_GameMap* map;
 	G_EntityManager* entity_manager;
 } G_Game;
@@ -49,6 +51,11 @@ typedef struct {
 	bool is_energising;
 	float energy_level;
 } G_GamePlayer;
+
+typedef struct {
+	size_t num;
+	G_GamePlayer* players;
+} G_GamePlayers;
 
 // ai
 // determine angle formed from parabolic trajectory relating to range and elevation

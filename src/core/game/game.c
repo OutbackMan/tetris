@@ -1,46 +1,55 @@
-#include "core/game.h"
+#include "core/game/game.h"
 
 #include <SDL2/SDL.h>
 
 #include <stdbool.h>
+#include <stdlib.h>
 
-#define ARGTABLE3_IMPLEMENTATION
-#include "lib/utils/argtable3.h"
-#define XMEM_IMPLEMENTATION
-#include "lib/utils/xmem.h"
+#include "lib/argtable3.h"
 
 #include "common.h"
+#include "core/game/camera.h"
+#include "core/game/map.h"
+#include "core/game/players.h"
 #include "core/loop.h"
-#include "core/events.h"
-#include "core/update.h"
-#include "core/render.h"
-#include "core/quit.h"
 #include "utils/error.h"
+#include "utils/xmem.h"
 
-#ifdef BUILD_MODE_DEBUG
-#define SDL_ASSERT_LEVEL 2
-SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
-#elif defined(BUILD_MODE_RELEASE)
+#ifdef G_BUILD_MODE_RELEASE
 #define SDL_ASSERT_LEVEL 1
 SDL_LogSetAllPriority(SDL_LOG_PRIORITY_CRITICAL);
-SDL_assert/_release();
+#elif defined(G_BUILD_MODE_DEBUG)
+#define SDL_ASSERT_LEVEL 2
+SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
 #endif
+
+inline void g_game_exit(int exit_status)
+{
+	SDL_Quit();
+	exit(exit_status);
+}
 
 GAME_COLD 
 void g_game_execute(void)
 {
 	Game* game = game_create();
 	if (game == NULL) {
-		SDL_LOG("%s", error_get_msg_str());		
+		SDL_LogCritical(
+			SDL_LOG_CATEGORY_APPLICATION, 
+			"Unable to create game instance %s", 
+			g_error_get()
+		);
+		return;
+	} else {
+		g_loop__execute(game);
 	}
-
-	g_loop__execute(&game);
 }
 
 GAME_COLD
 GAME_INTERNAL Game* game_create(void)
 {
 	// parse_args()
+	Game* game = NULL;
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		SDL_LogCritical(
@@ -48,13 +57,14 @@ GAME_INTERNAL Game* game_create(void)
 			"Unable to initialise game SDL backend: %s\n", 
 			SDL_GetError()
 		);
+		g_error_set(ESDL2);
 		return;
 	}
 
 	const char* window_title = GAME_UNAME" ["GAME_COMPILER" - x86/64]("\
 								GAME_BUILD_MODE")";
 
-	Game* game = xmalloc(sizeof(Game));
+	game = xmalloc(sizeof(Game));
 
 	game->window = SDL_CreateWindow(
 						window_title, 
@@ -71,6 +81,7 @@ GAME_INTERNAL Game* game_create(void)
 			"Unable to create gmae window: %s\n", 
 			SDL_GetError()
 		);
+		g_game_exit(EXIT_FAILURE);
 	}
 
 	const int DEFAULT_RENDERING_DRIVER = -1;
@@ -86,6 +97,7 @@ GAME_INTERNAL Game* game_create(void)
 			"Unable to create game renderer: %s\n", 
 			SDL_GetError()
 		);
+		g_game_exit(EXIT_FAILURE);
 	}
 
 		
@@ -109,14 +121,32 @@ GAME_INTERNAL G_Camera* game_camera_create()
 	return camera;
 }
 
-GAME_INTERNAL G_Player* game_player_create(int num_players)
+GAME_INTERNAL G_GamePlayers* game_players_create(int num_players)
 {
-	G_Player* players = xmalloc(sizeof(G_GamePlayer) * num_players);
-	for (int i = 0; i < num_players; ++i) {
-		// ...
-		*players++ = create_player();
-	}	
+	G_GamePlayers* players = xmalloc(sizeof(G_GamePlayers));
+	players->players = xmalloc(sizeof(G_GamePlayer) * num_players);
+
+	G_GamePlayer* player_iter = players->players;
+
+	while (player_iter != players->players + num_players) {
+		*player_iter++ = create_player();
+	}
+
+	players->num = num_players;
+
 	return players;
+}
+
+G_GamePlayer* game_player_create(void)
+{
+	G_GamePlayer* player = xmalloc(sizeof(G_GamePlayer));	
+	// ...
+}
+
+void game_players_destroy(G_GamePlayers* players)
+{
+	free(players->players);
+	free(players);
 }
 
 GAME_INTERNAL G_Map* game_map_create(int width, int height)

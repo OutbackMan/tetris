@@ -3,40 +3,40 @@
 GAME_HOT
 GAME_STATUS game_handle_events(G_Game* game)
 {
-	SDL_assert_release(game != NULL);
+	SDL_assert(game != NULL);
 
-	SDL_Event event = {0};
+	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
-		switch (event->type) {
+		switch (event.type) {
 		case SDL_QUIT:
-			game->want_to_run = false;
+			events_handle_quit(G_Game* game);
 			break;
 		case SDL_WINDOWEVENT:
-			events_handle_window_events(G_Game* game);
-			break;
-		case SDL_KEYUP:
-			events_handle_key_up(event->key);
+			events_handle_window(G_Game* game, &event.window);
 			break;
 		case SDL_KEYDOWN:
-			events_handle_key_down(event->key);
+			events_handle_key_down(G_Game* game, &event.key);
 			break;
-		case SDL_MOUSEBUTTONUP:
-			events_handle_mouse_up();
+		case SDL_KEYUP:
+			events_handle_key_up(G_Game* game, &event.key);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			events_handle_mouse_down();
+			events_handle_mouse_down(G_Game* game, &event.button);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			events_handle_mouse_up(G_Game* game, &event.button);
 			break;
 		case SDL_MOUSEMOTION:
-			events_handle_mouse_motion();
+			events_handle_mouse_motion(G_Game* game, &event.motion);
 			break;
 		}
 	}
 }
 
 GAME_INTERNAL
-GAME_STATUS game_handle_window_events(G_GameWindow* game_window, SDL_WindowEvent* event)
+GAME_STATUS game_handle_window(G_GameWindow* game_window, SDL_WindowEvent* window_event)
 {
-	switch (window_event->event) {
+	switch (window_event->type) {
 	case SDL_WINDOWEVENT_EXPOSED:
 		game_window->is_exposed = true;
 		break;

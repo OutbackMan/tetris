@@ -1,30 +1,7 @@
-#ifndef __bit_array_h__
-#define __bit_array_h__
+#include "data-structures/bit-array.h"
 
-#include <stdint.h>
-
-#define BITS_IN_BYTE CHAR_BIT
-
-typedef struct {
-	char* data;
-	size_t length;
-	size_t capacity;
-} BitArray;
-
-BitArray* bit_array_create(size_t number_of_bits);
-
-void bit_array_destroy(BitArray* bit_array);
-
-void bit_array_set_bit(BitArray* bit_array, size_t bit_index);
-
-void bit_array_clear_bit(BitArray* bit_array, size_t bit_index);
-
-int bit_array_get_bit(BitArray* bit_array, size_t bit_index);
-
-#endif
-
-
-#ifdef BIT_ARRAY_IMPLEMENTATION
+#include "common.h"
+#include "utils/xmem.h"
 
 #include <stdlib.h>
 
@@ -43,9 +20,7 @@ int bit_array_create(BitArray* bit_array, size_t number_of_bits)
 {
 	size_t bytes_from_bits = bits_to_bytes(number_of_bits);
 
-	bit_array->data = malloc(sizeof(char) * bytes_from_bits);	
-	if (bit_array->data == NULL) {
-		exit(EXIT_FAILURE);
+	bit_array->data = xmalloc(sizeof(char) * bytes_from_bits);	
 	}
 	bit_array->length = number_of_bits;
 	bit_array->capacity = bytes_from_bits * BITS_IN_BYTE;
@@ -89,5 +64,3 @@ int bit_array_get_bit(BitArray* bit_array, size_t bit_number)
 		return 0;		
 	}
 }
-
-#endif

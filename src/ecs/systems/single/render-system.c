@@ -1,10 +1,3 @@
-typedef struct {
-	int x;
-	int y;
-	SDL_Texture* texture;
-	int width;
-	int height;
-} Render;
 
 void g_render_system_execute()
 {
