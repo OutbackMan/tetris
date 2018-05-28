@@ -46,7 +46,12 @@ License:
 
 #define G_FALLTHROUGH_INTENDED
 #define G_NO_DEFAULT_CASE
-#define G_SDL_NO_FLAGS 0
+
+#define G_FLOAT_DEFAULT 0.0f
+#define G_DOUBLE_DEFAULT 0.0
+#define G_UINT_DEFAULT 0U
+#define G_INT_DEFAULT 0
+#define G_STRUCT_DEFAULT {0}
 
 #endif
 

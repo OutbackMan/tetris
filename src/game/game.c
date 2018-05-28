@@ -1,4 +1,4 @@
-#include "core/game/game.h"
+#include "game/game.h"
 
 #include <SDL2/SDL.h>
 
@@ -6,11 +6,12 @@
 #include <stdlib.h>
 
 #include "common.h"
-#include "core/game/camera.h"
-#include "core/game/map.h"
-#include "core/game/players.h"
-#include "core/loop.h"
+#include "game/camera.h"
+#include "game/map.h"
+#include "game/players.h"
+#include "loop.h"
 #include "utils/error.h"
+#include "utils/sdl-wrappers.h"
 #include "utils/xmem.h"
 
 inline void g_game_exit(int exit_status)
@@ -89,12 +90,15 @@ G_INTERNAL G_Game* game_create(void)
 		g_game_exit(EXIT_FAILURE);
 	}
 
+	game->view_id = G_VIEW_MENU;
+	game->want_to_run = true;
 		
+	/*
 	game->camera = game_camera_create();
 	game->players = game_players_create(10);
 	game->entity_manager = game_entity_manager_create();
 	game->map = game_map_create(500, 500);
-	game->want_to_run = true;
+	*/
 }
 
 G_INTERNAL G_Camera* game_camera_create()
