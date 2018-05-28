@@ -6,9 +6,9 @@
 #include <stdlib.h>
 
 #include "common.h"
-#include "game/camera.h"
-#include "game/map.h"
-#include "game/players.h"
+#include "camera.h"
+#include "map.h"
+#include "players.h"
 #include "loop.h"
 #include "utils/error.h"
 #include "utils/sdl-wrappers.h"
@@ -32,87 +32,103 @@ void g_game_execute(void)
 		);
 		return;
 	} else {
-		g_loop__execute(game);
+		g_game__loop(game);
 	}
 }
 
 G_COLD
 G_INTERNAL G_Game* game_create(void)
 {
-	Game* game = NULL;
-
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+	if (SDL_Init(SDL_VIDEO | SDL_AUDIO | SDL_TIMER) < 0) {
 		SDL_LogCritical(
 			SDL_LOG_CATEGORY_SYSTEM, 
-			"Unable to initialise game SDL backend: %s\n", 
+			"Unable to initialise SDL backend: %s\n", 
 			SDL_GetError()
 		);
 		g_error_set(ESDL2);
 		return;
 	}
 
+	const unsigned FIELD_WIDTH = 160;
+	const unsigned FIELD_HEIGHT = 120;
+
 	const char* window_title = G_UNAME" ["G_COMPILER" - x86/64]("\
 								G_BUILD_MODE")";
 
-	game = g_xmalloc(sizeof(Game));
+	Game* game = g_xmalloc(sizeof(Game));
 
 	game->window = SDL_CreateWindow(
 						window_title, 
 						SDL_WINDOWPOS_UNDEFINED, 
 						SDL_WINDOWPOS_UNDEFINED,
-						args->window_width, 
-						args->window_height, 
+						FIELD_WIDTH, 
+						FIELD_HEIGHT, 
 						SDL_WINDOW_RESIZABLE
 					);
+
 	
 	if (game->window == NULL) {
 		SDL_LogCritical(
 			SDL_LOG_CATEGORY_VIDEO, 
-			"Unable to create gmae window: %s\n", 
+			"Unable to create window: %s\n", 
 			SDL_GetError()
 		);
 		g_game_exit(EXIT_FAILURE);
 	}
 
-	const int DEFAULT_RENDERING_DRIVER = -1;
 	game->renderer = SDL_CreateRenderer(
 							game->window, 
-							DEFAULT_RENDERING_DRIVER, 
+							G_DEFAULT_RENDERING_DRIVER, 
 							G_SDL_NO_FLAGS
 						);
 
 	if (game->window == NULL) {
 		SDL_LogCritical(
 			SDL_LOG_CATEGORY_RENDER, 
-			"Unable to create game renderer: %s\n", 
+			"Unable to create renderer: %s\n", 
 			SDL_GetError()
 		);
 		g_game_exit(EXIT_FAILURE);
 	}
 
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, G_SDL_NEAREST_PIXEL_SAMPLING_FLAG);
+	if (SDL_RenderSetLogicalSize(game->renderer, FIELD_WIDTH, FIELD_HEIGHT) < 0) {
+		SDL_LogCritical(
+			SDL_LOG_CATEGORY_RENDER, 
+			"Unable to set renderer logical size: %s\n", 
+			SDL_GetError()
+		);
+		g_game_exit(EXIT_FAILURE);
+		
+	}
+
 	game->view_id = G_VIEW_MENU;
 	game->want_to_run = true;
+	
+	const int MAP_WIDTH = 64; 
+	const int MAP_HEIGHT = 16;
+	const unsigned MAP_RENDER_TILE_WIDTH = 16;
+	const unsigned MAP_RENDER_TILE_HEIGHT = 16;
+	game->map = g_map_create(
+					MAP_WIDTH, 
+					MAP_HEIGHT, 
+					MAP_TILE_WIDTH,
+					MAP_TILE_HEIGHT
+				);
+	gama->camera = g_camera_create();
 		
 	/*
-	game->camera = game_camera_create();
 	game->players = game_players_create(10);
 	game->entity_manager = game_entity_manager_create();
-	game->map = game_map_create(500, 500);
 	*/
 }
 
-G_INTERNAL G_Camera* game_camera_create()
+void update()
 {
-	G_Camera* camera = xmalloc(sizeof(G_Camera));
-
-	camera->x = 0;
-	camera->y = 0;
-	camera->target_x = 0;
-	camera->target_y = 0;
-	camera->tracking_entity_index = 0;
-
-	return camera;
+	camera->tracking_x = player->pos_x;
+	camera->tracking_y = player->pos_y;
 }
+
 
 G_INTERNAL G_GamePlayers* game_players_create(int num_players)
 {

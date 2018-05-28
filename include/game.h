@@ -8,7 +8,7 @@ typedef struct {
 	bool want_to_run;	
 	// current_map
 	G_Window* window;
-	G_Renderer* renderer;
+	SDL_Renderer* renderer;
 	G_Camera* camera;
 	G_Players* players;
 	G_Map* map;

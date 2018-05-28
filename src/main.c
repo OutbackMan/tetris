@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include "common.h"
-#include "game/game.h"
+#include "game.h"
 
 int main(int argc, char** argv)
 {
@@ -18,9 +18,8 @@ int main(int argc, char** argv)
 
 	const float DESIRED_FPS = 60.0f;
 	const unsigned MAX_UPDATE_STEPS = 6;
-	const float MAX_DELTA_TIME = 1.0f;
 
-	g_game_execute();
+	g_game_execute(DESIRED_FPS, MAX_UPDATE_STEPS);
 
 	return EXIT_SUCCESS;	
 }
