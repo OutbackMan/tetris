@@ -6,6 +6,12 @@
 #@	2. ctest [-R <test-suite>]
 #@	3. cpack [-C <build-type>]
 
+# sdl ios/android cmake repositories, sdl_gpu, dinomage games
+# Have to build from source for android and ios builds
+# iOS: xcodebuild -target "${PROJECT_NAME}" -sdk "${TARGET_SDK}" -configuration Release (.app)
+# /usr/bin/xcrun -sdk iphoneos PackageApplication -v "${RELEASE_BUILDDIR}/${APPLICATION_NAME}.app" -o "${BUILD_HISTORY_DIR}/${APPLICATION_NAME}.ipa" --sign "${DEVELOPER_NAME}" --embed "${PROVISONING_PROFILE}” (.ipa)
+# android: 
+
 ################################################################################
 # CMAKE CONFIGURATION                                                          #
 ################################################################################
