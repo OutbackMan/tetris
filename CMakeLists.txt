@@ -10,7 +10,15 @@
 # Have to build from source for android and ios builds
 # iOS: xcodebuild -target "${PROJECT_NAME}" -sdk "${TARGET_SDK}" -configuration Release (.app)
 # /usr/bin/xcrun -sdk iphoneos PackageApplication -v "${RELEASE_BUILDDIR}/${APPLICATION_NAME}.app" -o "${BUILD_HISTORY_DIR}/${APPLICATION_NAME}.ipa" --sign "${DEVELOPER_NAME}" --embed "${PROVISONING_PROFILE}” (.ipa)
-# android: 
+
+# ANDROID: (for testing --> droid@screen)
+# JDK (comes with JRE)
+# git clone https://github.com/spurious/SDL-mirror (git clone https://github.com/aduros/SDL_image)
+# cd android (gradle files)
+# ./gradlew assembleDebug (perhaps use ant instead)
+# ./gradlew installDebug
+# SDLActivity.java
+# put our source files in SDL-mirror/android-project/jni/src/
 
 ################################################################################
 # CMAKE CONFIGURATION                                                          #
