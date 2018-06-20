@@ -12,8 +12,12 @@
 # /usr/bin/xcrun -sdk iphoneos PackageApplication -v "${RELEASE_BUILDDIR}/${APPLICATION_NAME}.app" -o "${BUILD_HISTORY_DIR}/${APPLICATION_NAME}.ipa" --sign "${DEVELOPER_NAME}" --embed "${PROVISONING_PROFILE}” (.ipa)
 
 # ANDROID: (for testing --> droid@screen)
-# JDK (comes with JRE)
+# cp -r SDL2/android-project game/platforms/android
+# ln -s SDL2-2.0.3 SDL2 && ln -s SDL2-2.0.3_ttf SDL2_ttf
+# src/org/libsdl/app/SDLActivity.java uncomment System.loadLibrary("SDL2_ttf"). this calls main via JNI. adb to install
+# REQUIREMENTS --> JDK (comes with JRE), android SDK and NDK, gradle
 # git clone https://github.com/spurious/SDL-mirror (git clone https://github.com/aduros/SDL_image)
+# OR PERHAPS DOWNLOAD .tar.gz and .zip files
 # cd android (gradle files)
 # ./gradlew assembleDebug (perhaps use ant instead)
 # ./gradlew installDebug
