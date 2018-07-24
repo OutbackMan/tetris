@@ -105,6 +105,13 @@ matrix:
       env:
         - MATRIX_EVAL="brew update && brew install gcc@7 && CC=gcc-7"
 
+matrix:
+  include:
+    - os: linux
+    - stage: Github Release
+    deploy:
+      - provider
+
 before_install:
   - 'if [ ${TRAVIS_OS_NAME} == "linux" ]; then
 		sudo add-apt-repository --yes ppa:zoogie/sdl2-snapshots || travis_terminate 1;
@@ -123,3 +130,16 @@ script:
   - cmake -DCMAKE_BUILD_TYPE=Release ..
   - cmake --build . -- -j2
   - ctest -j2
+  
+before_deploy:
+  - cpack
+  
+deploy:
+  - provider: releases
+  - api_key: ""
+  - file_glob: true
+  - file: directory/*/**
+  - file: ""
+  - skip_cleanup: true
+  - on:
+      tags: true
