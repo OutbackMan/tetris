@@ -31,4 +31,26 @@ jobs:
           paths: "/usr/local/Cellar/cmake"
           
       
-    
+.travis.yml:
+git:
+  depth: 1
+  quiet: true
+  
+language: c
+compiler: clang
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-trusty-6.0
+    packages:
+      - clang-6.0
+before_script: 
+  - export CC=clang-6.0
+script:
+  - cmake -DCMAKE_BUILD_TYPE=Release
+  - cmake --build build -- -j2
+  - ctest -j2
+
+
+
+
