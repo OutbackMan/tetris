@@ -1,0 +1,28 @@
+cmake -H. -Bbuild
+cmake --build build
+./bin/file.exe
+
+Run on VM which publish results
+key: value
+  - list_item
+
+job, executor, 
+.circleci/config.yml:
+version: 2
+jobs:
+  build:
+    branches:
+      only:
+        - master
+    macos:
+      xcode: "10.0.0"
+    steps:
+      - checkout
+      - run:
+          name: Installing CMake
+          command: brew install cmake
+      - run:
+          name: Installing CMake
+          command: brew install cmake
+      
+    
