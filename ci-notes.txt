@@ -18,11 +18,17 @@ jobs:
       xcode: "10.0.0"
     steps:
       - checkout
+      - restore_cache:
+          key: CMAKE_3_12_X
       - run:
-          name: Installing CMake
-          command: brew install cmake
+          name: Ensuring CMake is Installed
+          command: type -P cmake > /dev/null || brew install cmake
       - run:
-          name: Installing CMake
-          command: brew install cmake
+          name: Configuring
+          command: cmake -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Release
+      - save_cache:
+          key: CMAKE_3_12_X
+          paths: "/usr/local/Cellar/cmake"
+          
       
     
