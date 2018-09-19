@@ -19,7 +19,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: CMAKE_3_12_X
+          key: CMAKE
       - run:
           name: Ensuring CMake is Installed
           command: type -P cmake > /dev/null || brew install cmake
@@ -27,7 +27,7 @@ jobs:
           name: Configuring
           command: cmake -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Release
       - save_cache:
-          key: CMAKE_3_12_X
+          key: CMAKE
           paths: "/usr/local/Cellar/cmake"
           
       
@@ -44,13 +44,24 @@ addons:
       - llvm-toolchain-trusty-6.0
     packages:
       - clang-6.0
-before_script: 
-  - export CC=clang-6.0
 script:
-  - cmake -DCMAKE_BUILD_TYPE=Release
+  - cmake -DCMAKE_C_COMPILER=clang-6.0 -DCMAKE_BUILD_TYPE=Release
   - cmake --build build -- -j2
   - ctest -j2
 
+appveyor.yml:
+branches:
+  only:
+    - master
+    
+clone_depth: 1
+    
+build_script:
+  - |-
+    cmake -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Release
+    cmake --build build -- /m
+  
+  
 
 
 
