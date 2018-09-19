@@ -32,6 +32,9 @@ jobs:
           
       
 .travis.yml:
+branches:
+  only:
+    - master
 git:
   depth: 1
   quiet: true
