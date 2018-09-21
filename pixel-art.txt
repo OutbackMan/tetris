@@ -1,0 +1,36 @@
+PREFERENCES->INPUT-CONTROLLERS:                                                 
+zooming                                                                         
+                                                                                
+TOOLS:                                                                          
+(n)pixel pencil, (r, e)selection, (shift+e)eraser -> dynamics, anti-aliasing, hard edge
+(o)colour picker -> sample merged                                               
+(shift-o)select by colour                                                       
+                                                                                
+DOCKABLE DIALOGS:                                                               
+TR->navigation                                                                  
+CR->layers                                                                      
+BR->colours (with selected palette)                                             
+C->(view->grid, image->configure-grid)                                          
+TL->tools                                                                       
+BL->tool-options                                                                
+OPTIONAL->(view of reference image)                                             
+                                                                                
+WORKFLOW:                                                                       
+ctrl+shift+n->draw new objects (shadows 2) into own transparent filled layer       
+                                                                                
+USEFUL:                                                                         
+preferences->window-management->save-window-options                             
+preferences->tool-options->save-tool-options                                    
+right angled triangles in direction of light for shadows                        
+                                                                                
+float and anchor layer-> ctrl+shift+l->ctrl+h                                   
+copying layer-> alt+shift+drag->ctrl+h                                          
+deselect-> ctrl+shift+a                                                         
+background-alpha-> colours->colour-to-alpha(paste into new layer), path-to-selection->cut->paste
+                                                                                
+TOPICS:                                                                         
+lines->aim for perfect lines (45, 30, ...) but can have jagged lines to respect a shape (applies to all of pixel art in general)
+circles->draw diagonals of various thicknesses from base edges                  
+sword->join lines with one up and other down. get centre of shape by going through corner. can add 'clutter' pixels to close off. have light and dark variants of same colour to indicate shadow. 
+light->direction affects colour intensity and location of shadows. reflected light respects the hue of the reflecting surface
+spheres->shading gives illusion of depth. select colours of increasing degrees of lightness than base colour (lightest for glossy circle). the transition from light to dark with respect to shading occurs at a much faster rate then the lightest shade, i.e. area is smaller (not as true for furs and other materials which trap the light). 
