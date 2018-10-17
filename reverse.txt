@@ -1,0 +1,43 @@
+PATCHER:
+with open('crackme1.exe', 'rb') as orig_bin:
+    bin_data = bytearray(orig_bin.read())
+    offset = 0x840
+    bin_data[offset] = 0x01
+    with open('crackme1-patched.exe', 'wb') as patched_bin:
+       patched_bin.write(bin_data) 
+       
+LOADER:
+#include <windows.h>
+
+int
+main(int argc, char* argv[argc + 1])
+{
+  STARTUPINFO si = { sizeof(STARTUPINFO) };
+  PROCESS_INFORMATION pi; 
+
+  BOOL process = CreateProcess(
+		   "crackme1.exe",
+		   "",
+		   NULL,
+		   NULL,
+                   FALSE,
+		   CREATE_SUSPENDED,
+		   NULL,
+		   NULL,
+		   &si,
+		   &pi
+		 );
+
+  SIZE_T bytes_written;
+  WriteProcessMemory(
+    pi.hProcess,
+    (LPVOID)0x403040, // relative address
+    "\x01",
+    1,
+    &bytes_written
+  );
+
+  ResumeThread(pi.hThread);
+
+  return 0;
+}
