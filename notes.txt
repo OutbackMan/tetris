@@ -1,5 +1,5 @@
 TO-LEARN:
-tune, bass run, tones, riffs, ballad, pitch, note, tenor, staccato (pedal essential to prevent this)
+tune, bass run, tones, riffs, ballad, pitch, note, tenor, staccato (pedal essential to prevent this), octave
 
 POSTURE:
 wellbalancedpianist.com
@@ -8,6 +8,8 @@ GENERAL:
 88 keys, 12 notes, 3-2/4-3
 beat is a underlying steady and regular pulse (usually doesn't change)
 rhythm is the actual flow of music through time (changing the beat will change the rhythm)
+treble and bass clef staves with bars are joined by middle c
+
 
 CHORDS:
 3 or more notes played together
@@ -16,4 +18,7 @@ harmony is a group of notes played around the melody
 root note is what the chord is derived from
 bass note is the lowest pitch note in the chord
 voicing is how you distribute the notes of a chord
+chords are based on the notes comprising scales (e.g. chords from C family are based on C major scale C-Dm-Em-G-F-Am-Bdim)
 claw position
+
+C-Am-F-G
