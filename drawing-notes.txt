@@ -1,2 +1,4 @@
 Various types of LINES create shape, perspective and motion -> SHAPES -> FORM is the 3D aspect 
 -> VALUE is the lightness and darkness -> PERSPECTIVE makes image look grounded
+
+Light outline. Darken and refine edges. Smooth by drawing lightly near. Move about
