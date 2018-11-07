@@ -2,3 +2,6 @@ Various types of LINES create shape, perspective and motion -> SHAPES -> FORM is
 -> VALUE is the lightness and darkness -> PERSPECTIVE makes image look grounded
 
 Light outline. Darken and refine edges. Smooth by drawing lightly near. Move about
+
+Counter lines make up an image.
+Line quality, i.e. line thickness creates contrast.
