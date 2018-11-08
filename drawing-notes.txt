@@ -1,7 +1,11 @@
 Various types of LINES create shape, perspective and motion -> SHAPES -> FORM is the 3D aspect 
 -> VALUE is the lightness and darkness -> PERSPECTIVE makes image look grounded
 
-Light outline. Darken and refine edges. Smooth by drawing lightly near. Move about
+Light outline. Darken and refine edges. Smooth edges by drawing lightly near. Move about
 
-Counter lines make up an image.
+Counter lines make up an image (practise this by drawing shape with continual stroke)
+When drawing from real life objects, spend more time on studying the object then the drawing.
+Cross-contour lines follow the form of the shape.
+Always try to include negative space.
+Lightly draw simple shapes and then draw over them to create organic shapes.
 Line quality, i.e. line thickness creates contrast.
