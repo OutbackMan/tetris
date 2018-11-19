@@ -9,5 +9,5 @@ Cross-contour lines follow the form of the shape, i.e show that it is rounded, s
 Always try to include negative space.
 Lightly draw simple shapes and then draw over them to create organic shapes. 
 Consider adding outline detail, possible edges, connect shapes together.
-Line quality, i.e. line thickness creates contrast.
+Line quality, i.e. line thickness creates contrast. What to do this with value also, i.e shading.
 For reflection draw inverse of shape down.
