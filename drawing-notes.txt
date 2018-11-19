@@ -5,7 +5,9 @@ Light outline. Darken and refine edges. Smooth edges by drawing lightly near. Mo
 
 Counter lines make up an image (practise this by drawing shape with continual stroke)
 When drawing from real life objects, spend more time on studying the object then the drawing.
-Cross-contour lines follow the form of the shape.
+Cross-contour lines follow the form of the shape, i.e show that it is rounded, slanted etc.
 Always try to include negative space.
-Lightly draw simple shapes and then draw over them to create organic shapes.
+Lightly draw simple shapes and then draw over them to create organic shapes. 
+Consider adding outline detail, possible edges, connect shapes together.
 Line quality, i.e. line thickness creates contrast.
+For reflection draw inverse of shape down.
