@@ -12,5 +12,5 @@ Consider adding outline detail, possible edges, connect shapes together.
 Line quality, i.e. line thickness creates contrast. What to do this with value also, i.e shading.
 For reflection draw inverse of shape down.
 When giving shape form, consider the shape of the 2d edge when extending lines. Rotating/tilting will squash some sides and extend others.
-Highlight (leave white), mid, core and cast shadows. Identify where the planes/rises/divets of the object are, i.e once shape is identified, consider the form. Consider how bounced light affects shadow.
+Highlight (leave white), mid, core and cast shadows. Identify where the planes/rises/divets of the object are, i.e once shape is identified, consider the basic geometric form. Consider how bounced light affects shadow.
 Cast shadows typically mimic part of the core shape (will typically fade away).
