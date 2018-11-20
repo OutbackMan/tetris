@@ -3,6 +3,8 @@ Various types of LINES create shape, perspective and motion -> SHAPES -> FORM is
 
 Light outline. Darken and refine edges. Smooth edges by drawing lightly near. Move about
 
+Place hand on paper to avoid smudging.
+
 Counter lines make up an image (practise this by drawing shape with continual stroke)
 When drawing from real life objects, spend more time on studying the object then the drawing.
 Cross-contour lines follow the form of the shape, i.e show that it is rounded, slanted etc.
@@ -12,5 +14,6 @@ Consider adding outline detail, possible edges, connect shapes together.
 Line quality, i.e. line thickness creates contrast. What to do this with value also, i.e shading.
 For reflection draw inverse of shape down.
 When giving shape form, consider the shape of the 2d edge when extending lines. Rotating/tilting will squash some sides and extend others.
-Highlight (leave white), mid, core and cast shadows. Identify where the planes/rises/divets of the object are, i.e once shape is identified, consider the basic geometric form. Consider how bounced light affects shadow.
+Highlight (leave white), mid, core and cast shadows. Identify where the planes/rises/divets of the object are, i.e once shape is identified, consider the basic geometric form. Consider how bounced light affects shadow. Further away objects will recieve lighter values.
 Cast shadows typically mimic part of the core shape (will typically fade away).
+Putting dark colours together can make them look light.
