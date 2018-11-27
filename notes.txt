@@ -7,7 +7,7 @@ wellbalancedpianist.com
 GENERAL:
 88 keys, 12 notes, 3-2/4-3
 beat is a underlying steady and regular pulse (usually doesn't change)
-rhythm is the actual flow of music through time (changing the beat will change the rhythm)
+rhythm is the actual flow of music through time (changing the beat will change the rhythm --> beats per bar)
 treble and bass clef staves with bars are joined by middle c
 
 
@@ -19,6 +19,7 @@ root note is what the chord is derived from
 bass note is the lowest pitch note in the chord
 voicing is how you distribute the notes of a chord
 chords are based on the notes comprising scales (e.g. chords from C family are based on C major scale C-Dm-Em-G-F-Am-Bdim)
+to create a sweeping broken chord melody, right hand over the left, maintaining sustain pedal.
 claw position
 
 C-Am-F-G
