@@ -18,3 +18,6 @@ run_addon = QAction("addon", mw)
 run_addon.triggered.connect(addon_functionality)
 
 mw.form.menuTools.addAction(run_addon)
+
+# http://theremin.music.uiowa.edu/MISpiano.html
+# https://stackoverflow.com/questions/45540860/download-all-the-files-in-the-website
