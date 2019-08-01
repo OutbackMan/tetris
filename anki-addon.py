@@ -17,6 +17,7 @@ def addon_functionality():
     # add a note which references it
     f = d.newNote()
     f['Front'] = "one"; f['Back'] = "<img src='fake.png'>"
+    # <audio src='file.mp3'>
     d.addNote(f)
     
     card = deck.newNote()
