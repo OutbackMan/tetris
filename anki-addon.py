@@ -5,9 +5,25 @@ from aqt.utils import showInfo
 from aqt.qt import *
 
 def addon_functionality():
-    deck_id = mw.col.decks.id("Encoding")
+    deck_id = mw.col.decks.id("Encodings")
     deck = mw.col.decks.get(deck_id)
-    # look at REPL
+    
+    # create a media directory
+    deck.media.dir()
+    
+    # put a file into it
+    file = str(os.path.join(testDir, "support/fake.png"))
+    d.media.addFile(file)
+    # add a note which references it
+    f = d.newNote()
+    f['Front'] = "one"; f['Back'] = "<img src='fake.png'>"
+    d.addNote(f)
+    
+    card = deck.newNote()
+    card['Front'] = image
+    card['Back'] = image_title
+    
+    deck.addNote(card)
     
     cardCount = mw.col.cardCount()
     # show a message box
