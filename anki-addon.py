@@ -1,17 +1,32 @@
+# tools --> add-ons folder --> name/__init__.py
+
 from aqt import mw
 
 from aqt.utils import showInfo
 
 from aqt.qt import *
 
-def addon_functionality():
+import os
+
+# This will add to default deck
+def populate_encoding_deck():
     deck_id = mw.col.decks.id("Encodings")
     deck = mw.col.decks.get(deck_id)
     
-    # create a media directory
-    deck.media.dir()
+    # INFO(Ryan): Create a media directory.
+    mw.col.media.dir()
     
-    # put a file into it
+    images_dir = os.path.join(os.path.dirname(__file__), "images")
+    for file_name in os.listdir(images_dir):
+        media_file_path = os.path.join(images_dir, file_name)
+        mw.col.media.addFile(media_file_path)
+
+        new_note = mw.col.newNote()
+        new_note["Front"] = "<img src='{0}'>".format(file_name)
+        new_note["Back"] = os.path.splitext(file_name)[0]
+        mw.col.addNote(new_note)
+
+'''
     file = str(os.path.join(os.path.dirname(__file__), "support/fake.png"))
     d.media.addFile(file)
     # add a note which references it
@@ -29,12 +44,9 @@ def addon_functionality():
     cardCount = mw.col.cardCount()
     # show a message box
     showInfo("Card count: %d" % cardCount)
+'''
 
 
-run_addon = QAction("addon", mw)
-run_addon.triggered.connect(addon_functionality)
-
-mw.form.menuTools.addAction(run_addon)
-
-# http://theremin.music.uiowa.edu/MISpiano.html
-# https://stackoverflow.com/questions/45540860/download-all-the-files-in-the-website
+populate_encoding_deck_menu_item = QAction("populate_encoding_deck", mw)
+populate_encoding_deck_menu_item.triggered.connect(populate_encoding_deck)
+mw.form.menuTools.addAction(populate_encoding_deck_menu_item)
