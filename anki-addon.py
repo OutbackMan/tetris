@@ -12,7 +12,7 @@ def addon_functionality():
     deck.media.dir()
     
     # put a file into it
-    file = str(os.path.join(testDir, "support/fake.png"))
+    file = str(os.path.join(os.path.dirname(__file__), "support/fake.png"))
     d.media.addFile(file)
     # add a note which references it
     f = d.newNote()
